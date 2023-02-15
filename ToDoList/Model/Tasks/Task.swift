@@ -19,3 +19,16 @@ class Task {
 		self.title = title
 	}
 }
+
+// MARK: - Comparable
+
+extension Task: Comparable {
+
+	static func == (lhs: Task, rhs: Task) -> Bool {
+		lhs === rhs
+	}
+
+	static func < (lhs: Task, rhs: Task) -> Bool {
+		lhs.isCompleted == true && rhs.isCompleted == false
+	}
+}

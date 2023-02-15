@@ -11,7 +11,7 @@ final class ImportantTask: Task {
 
 	// MARK: - Nested types
 
-	enum Priority: String {
+	enum Priority: Comparable {
 		case low
 		case medium
 		case high

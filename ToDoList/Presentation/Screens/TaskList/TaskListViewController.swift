@@ -7,33 +7,28 @@
 
 import UIKit
 
-protocol ITaskListView: AnyObject {
-	/// Обновление данных в списке.
-	func reloadData()
-}
-
-protocol ITaskTableViewCellDelegate: AnyObject {
-	func didSwitchTaskCompletion(for task: Task)
+private enum Constants {
+	static let title = "To Do List"
 }
 
 final class TaskListViewController: UIViewController {
 
 	// UI
 	private lazy var tasksTableView: UITableView = {
-		let tableView = UITableView().prepareForAutoLayout()
+		let tableView = UITableView(frame: .zero, style: .grouped).prepareForAutoLayout()
 		tableView.registerCell(type: RegularTaskTableViewCell.self)
 		tableView.registerCell(type: ImportantTaskTableViewCell.self)
-		tableView.dataSource = self
+		tableView.dataSource = taskListDataSource
 		return tableView
 	}()
 
 	// Properties
-	private let presenter: ITaskListPresenter
+	private let taskListDataSource: ITaskListDataSource
 	
 	// MARK: - Init
 
-	init(presenter: ITaskListPresenter) {
-		self.presenter = presenter
+	init(taskListDataSource: ITaskListDataSource) {
+		self.taskListDataSource = taskListDataSource
 		super.init(nibName: nil, bundle: nil)
 	}
 
@@ -48,7 +43,8 @@ final class TaskListViewController: UIViewController {
 		setupUI()
 		setupLayout()
 		configureUI()
-		presenter.viewDidLoad()
+		taskListDataSource.tableView = tasksTableView
+		tasksTableView.reloadData()
 	}
 
 	// MARK: - Private methods
@@ -65,50 +61,9 @@ final class TaskListViewController: UIViewController {
 			tasksTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
 		])
 	}
-
+	
 	private func configureUI() {
 		view.backgroundColor = .white
-		title = "To Do List"
-	}
-}
-
-extension TaskListViewController: ITaskListView {
-	func reloadData() {
-		tasksTableView.reloadData()
-	}
-}
-
-extension TaskListViewController: UITableViewDataSource {
-
-	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		presenter.taskCount
-	}
-
-	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		guard let task = presenter.task(at: indexPath.row) else { return UITableViewCell() }
-
-		if let task = task as? RegularTask,
-		   let cell = tableView.dequeue(type: RegularTaskTableViewCell.self, for: indexPath) {
-			cell.configure(with: task)
-			cell.delegate = self
-			return cell
-		} else if let task = task as? ImportantTask,
-				  let cell = tableView.dequeue(type: ImportantTaskTableViewCell.self, for: indexPath) {
-			cell.configure(with: task)
-			cell.delegate = self
-			return cell
-		} else {
-			return UITableViewCell()
-		}
-	}
-}
-
-// MARK: - ITaskTableViewCellDelegate
-
-extension TaskListViewController: ITaskTableViewCellDelegate {
-
-	func didSwitchTaskCompletion(for task: Task) {
-		guard let index = presenter.index(for: task) else { return }
-		tasksTableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+		title = Constants.title
 	}
 }
