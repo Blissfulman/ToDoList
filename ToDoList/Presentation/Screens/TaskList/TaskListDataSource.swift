@@ -86,7 +86,20 @@ final class TaskListDataSource: NSObject, ITaskListDataSource {
 extension TaskListDataSource: ITaskTableViewCellDelegate {
 
 	func didSwitchTaskCompletedState(for task: Task) {
-		tableView?.reloadData()
+		guard let cellIndexBeforeUpdating = taskListDataSourceLayout.indexPath(for: task) else {
+			tableView?.reloadData()
+			return
+		}
+		task.isCompleted.toggle()
+		guard let cellIndexAfterUpdating = taskListDataSourceLayout.indexPath(for: task) else {
+			tableView?.reloadData()
+			return
+		}
+		tableView?.performBatchUpdates({
+			tableView?.moveRow(at: cellIndexBeforeUpdating, to: cellIndexAfterUpdating)
+		}, completion: { [weak self] _ in
+			self?.tableView?.reloadRows(at: [cellIndexAfterUpdating], with: .automatic)
+		})
 	}
 }
 
