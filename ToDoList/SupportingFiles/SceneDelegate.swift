@@ -9,8 +9,7 @@ import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
-	// MARK: - Properties
-
+	// Properties
 	var window: UIWindow?
 
 	// MARK: - Lifecycle

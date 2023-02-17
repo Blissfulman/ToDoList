@@ -12,10 +12,10 @@ final class TaskListAssembly {
 	func assemble() -> UIViewController {
 		let taskManager = TaskManager()
 		// Временно для тестирования
-		let magicCacheManager = MagicCacheManager()
-		let presenter = TaskListPresenter(taskManager: taskManager, magicCacheManager: magicCacheManager)
-		let viewController = TaskListViewController(presenter: presenter)
-		presenter.view = viewController
+		let taskRepository = TaskMockRepository().eraseToAnyRepository()
+		let taskListDataSourceLayout = TaskListDataSourceLayout(taskManager: taskManager, taskRepository: taskRepository)
+		let taskListDataSource = TaskListDataSource(taskListDataSourceLayout: taskListDataSourceLayout)
+		let viewController = TaskListViewController(taskListDataSource: taskListDataSource)
 		return viewController
 	}
 }

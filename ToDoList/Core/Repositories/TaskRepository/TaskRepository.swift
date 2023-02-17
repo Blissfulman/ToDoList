@@ -1,34 +1,36 @@
 //
-//  MagicCacheManager.swift
+//  TaskRepository.swift
 //  ToDoList
 //
-//  Created by Evgeniy Novgorodov on 12.02.2023.
+//  Created by Evgeniy Novgorodov on 15.02.2023.
 //
 
 import Foundation
 
-protocol IMagicCacheManager: AnyObject {
-	/// Получение задач из кеша.
-	/// - Returns: Задачи, полученные из кеша.
-	func getTasks() -> [Task]
-}
+final class TaskMockRepository: IRepository {
 
-/// Класс для имитации хранения задач в постоянном хранилище.
-final class MagicCacheManager: IMagicCacheManager {
+	typealias Object = Task
 
-	// Метод для метод для тестирования
-	func getTasks() -> [Task] {
-		var mockTasks = RegularTask.mockData() + ImportantTask.mockData()
-		mockTasks.enumerated().forEach { $1.isCompleted = $0.isMultiple(of: 2) }
-		mockTasks.shuffle()
-		return mockTasks
+	// MARK: - IRepository
+
+	func getObjectList(completion: @escaping (Result<[Object], Error>) -> Void) {
+		completion(.success(TaskMockRepository.mockTasks))
 	}
 }
 
-private extension RegularTask {
+private extension TaskMockRepository {
 
 	// Временный метод для тестирования
-	static func mockData() -> [RegularTask] {
+	static var mockTasks: [Task] {
+		let mockTasks: [Task] = mockRegularTasks + mockImportantTasks
+		mockTasks
+			.enumerated()
+			.forEach { $1.isCompleted = $0.isMultiple(of: 2) }
+		return mockTasks.shuffled()
+	}
+
+	// Временный метод для тестирования
+	static var mockRegularTasks: [RegularTask] {
 		[
 			RegularTask(title: "To clean the room"),
 			RegularTask(title: "Learning English"),
@@ -36,12 +38,9 @@ private extension RegularTask {
 			RegularTask(title: "To wash the dishes")
 		]
 	}
-}
-
-private extension ImportantTask {
 
 	// Временный метод для тестирования
-	static func mockData() -> [ImportantTask] {
+	static var mockImportantTasks: [ImportantTask] {
 		[
 			ImportantTask(
 				title: "Workout",
@@ -56,6 +55,11 @@ private extension ImportantTask {
 			ImportantTask(
 				title: "Homework",
 				creationDate: Date(),
+				priority: .high
+			),
+			ImportantTask(
+				title: "Relax",
+				creationDate: Calendar.current.date(byAdding: DateComponents(day: -1), to: Date())!,
 				priority: .high
 			),
 			ImportantTask(

@@ -8,6 +8,9 @@
 import UIKit
 
 private enum Constants {
+	static let titleLabelNumberOfLines: Int = 2
+	static let completedCheckboxImageName = "checkmark.circle.fill"
+	static let uncompletedCheckboxImageName = "circle"
 	static let contentViewHeight: CGFloat = 56
 	static let contentHorizontalInset: CGFloat = 16
 	static let contentSpace: CGFloat = 12
@@ -26,7 +29,7 @@ final class RegularTaskTableViewCell: UITableViewCell, IConfigurableTableCell {
 	}()
 	private lazy var titleLabel: UILabel = {
 		let label = UILabel().prepareForAutoLayout()
-		label.numberOfLines = 2
+		label.numberOfLines = Constants.titleLabelNumberOfLines
 		return label
 	}()
 
@@ -60,7 +63,7 @@ final class RegularTaskTableViewCell: UITableViewCell, IConfigurableTableCell {
 	func configure(with model: ConfigurationModel) {
 		task = model
 		titleLabel.text = model.title
-		checkboxImageView.image = UIImage(systemName: model.isCompleted ? "checkmark.circle.fill" : "circle")
+		checkboxImageView.image = UIImage(systemName: model.isCompleted ? Constants.completedCheckboxImageName : Constants.uncompletedCheckboxImageName)
 	}
 
 	// MARK: - Private methods
@@ -94,9 +97,7 @@ final class RegularTaskTableViewCell: UITableViewCell, IConfigurableTableCell {
 	}
 
 	@objc private func didTapCheckbox() {
-		if let task = task {
-			task.isCompleted = !task.isCompleted
-			delegate?.didSwitchTaskCompletion(for: task)
-		}
+		guard let task = task else { return }
+		delegate?.didSwitchTaskCompletedState(for: task)
 	}
 }
