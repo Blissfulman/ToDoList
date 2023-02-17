@@ -28,6 +28,7 @@
 		5E0D560A29990CAB00F9276E /* TaskListAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0D560929990CAB00F9276E /* TaskListAssembly.swift */; };
 		5E0D560E299913BE00F9276E /* ImportantTaskTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0D560D299913BD00F9276E /* ImportantTaskTableViewCell.swift */; };
 		5E0D5613299940DF00F9276E /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0D5612299940DF00F9276E /* UIView+Extension.swift */; };
+		5EC7537729A00548002A6775 /* PrioritySortedTaskManagerDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EC7537629A00548002A6775 /* PrioritySortedTaskManagerDecorator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +55,7 @@
 		5E0D560929990CAB00F9276E /* TaskListAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListAssembly.swift; sourceTree = "<group>"; };
 		5E0D560D299913BD00F9276E /* ImportantTaskTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportantTaskTableViewCell.swift; sourceTree = "<group>"; };
 		5E0D5612299940DF00F9276E /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
+		5EC7537629A00548002A6775 /* PrioritySortedTaskManagerDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrioritySortedTaskManagerDecorator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -187,6 +189,7 @@
 			isa = PBXGroup;
 			children = (
 				5E0D55EE299787C700F9276E /* TaskManager.swift */,
+				5EC7537629A00548002A6775 /* PrioritySortedTaskManagerDecorator.swift */,
 			);
 			path = TaskManager;
 			sourceTree = "<group>";
@@ -345,6 +348,7 @@
 				5E0D55D629977A8600F9276E /* AppDelegate.swift in Sources */,
 				5E0D55F32997881200F9276E /* Task.swift in Sources */,
 				5E0D56042998E49800F9276E /* ConfigurableTableCell.swift in Sources */,
+				5EC7537729A00548002A6775 /* PrioritySortedTaskManagerDecorator.swift in Sources */,
 				5E075CFC299D146A005FE58E /* Array+Extension.swift in Sources */,
 				5E0D55EF299787C700F9276E /* TaskManager.swift in Sources */,
 				5E0D560A29990CAB00F9276E /* TaskListAssembly.swift in Sources */,

@@ -28,9 +28,12 @@ protocol ITaskManager: AnyObject {
 	func deleteTask(_ task: Task) -> Bool
 }
 
-final class TaskManager: ITaskManager {
+class TaskManager: ITaskManager {
 
+	// Properties
 	private var tasks = [Task]()
+
+	// MARK: - ITaskManager
 
 	var allTasks: [Task] {
 		tasks

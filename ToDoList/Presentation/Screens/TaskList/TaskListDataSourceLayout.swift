@@ -47,10 +47,32 @@ final class TaskListDataSourceLayout: ITaskListDataSourceLayout {
 	// Properties
 	weak var delegate: ITaskListDataSourceLayoutDelegate?
 	private let taskManager: ITaskManager
+	private let prioritySortedTaskManagerDecorator: ITaskManager
 	private let taskRepository: AnyRepository<Task>
 
-	init(taskManager: ITaskManager, taskRepository: AnyRepository<Task>) {
+	private var isSeparatelyCompletedTasks: Bool {
+		delegate?.isSeparatelyCompletedTasks ?? false
+	}
+	private var sortingOption: SortingOption {
+		delegate?.sortingOption ?? .none
+	}
+	private var allTasks: [Task] {
+		sortingOption == .priority ? prioritySortedTaskManagerDecorator.allTasks : taskManager.allTasks
+	}
+	private var completedTasks: [Task] {
+		sortingOption == .priority ? prioritySortedTaskManagerDecorator.completedTasks : taskManager.completedTasks
+	}
+	private var uncompletedTasks: [Task] {
+		sortingOption == .priority ? prioritySortedTaskManagerDecorator.uncompletedTasks : taskManager.uncompletedTasks
+	}
+
+	init(
+		taskManager: ITaskManager,
+		prioritySortedTaskManagerDecorator: ITaskManager,
+		taskRepository: AnyRepository<Task>
+	) {
 		self.taskManager = taskManager
+		self.prioritySortedTaskManagerDecorator = prioritySortedTaskManagerDecorator
 		self.taskRepository = taskRepository
 		prepareData()
 	}
@@ -70,74 +92,34 @@ final class TaskListDataSourceLayout: ITaskListDataSourceLayout {
 	// MARK: - ITaskListDataLayout
 
 	var numberOfSections: Int {
-		guard let delegate = delegate else { return 1 }
-		return delegate.isSeparatelyCompletedTasks ? 2 : 1
+		isSeparatelyCompletedTasks ? 2 : 1
 	}
 
 	func numberOfTasks(in section: Int) -> Int {
-		guard let delegate = delegate,
-			  delegate.isSeparatelyCompletedTasks
-		else {
-			return taskManager.allTasks.count
+		if isSeparatelyCompletedTasks {
+			return section == 0 ? uncompletedTasks.count : completedTasks.count
+		} else {
+			return allTasks.count
 		}
-		return section == 0 ? taskManager.uncompletedTasks.count : taskManager.completedTasks.count
 	}
 
 	func task(at indexPath: IndexPath) -> Task? {
-		guard let delegate = delegate,
-			  delegate.isSeparatelyCompletedTasks
-		else {
-			let tasks = sort(tasks: taskManager.allTasks, by: delegate?.sortingOption ?? .none)
+		if isSeparatelyCompletedTasks {
+			let tasks = indexPath.section == 0 ? uncompletedTasks : completedTasks
 			return tasks[safe: indexPath.row]
+		} else {
+			return allTasks[safe: indexPath.row]
 		}
-		var tasks = indexPath.section == 0 ? taskManager.uncompletedTasks : taskManager.completedTasks
-		tasks = sort(tasks: tasks, by: delegate.sortingOption)
-		guard indexPath.row < tasks.count else { return nil }
-		return tasks[indexPath.row]
 	}
 
 	func indexPath(for task: Task) -> IndexPath? {
-		guard let delegate = delegate,
-			  delegate.isSeparatelyCompletedTasks
-		else {
-			guard let row = taskManager.allTasks.firstIndex(where: { $0 === task }) else { return nil }
+		if isSeparatelyCompletedTasks {
+			let tasks = task.isCompleted ? completedTasks : uncompletedTasks
+			guard let row = tasks.firstIndex(where: { $0 === task }) else { return nil }
+			return IndexPath(row: row, section: task.isCompleted ? 1 : 0)
+		} else {
+			guard let row = allTasks.firstIndex(where: { $0 === task }) else { return nil }
 			return IndexPath(row: row, section: 0)
-		}
-		var tasks = task.isCompleted ? taskManager.completedTasks : taskManager.uncompletedTasks
-		tasks = sort(tasks: tasks, by: delegate.sortingOption)
-		guard let row = tasks.firstIndex(where: { $0 === task }) else { return nil }
-		return IndexPath(row: row, section: task.isCompleted ? 1 : 0)
-	}
-
-	// MARK: - Private methods
-
-	private func sort(tasks: [Task], by option: SortingOption) -> [Task] {
-		guard let delegate = delegate else { return tasks }
-
-		switch delegate.sortingOption {
-		case .none:
-			return tasks
-		case .priority:
-			return tasks.sorted { sortingByPriority($0, and: $1) }
-		}
-	}
-
-	// Обеспечивает сортировку, при которой важные задачи располагаются первее обычных (первый критерий),
-	// важные с более высоким приоритетом первее важных с более низким приоритетом (второй критерий),
-	// а невыполненные первее выполненных (третий критерий)
-	private func sortingByPriority(_ task1: Task, and task2: Task) -> Bool {
-		switch (task1, task2) {
-		case (_ as ImportantTask, _ as RegularTask):
-			return true
-		case (_ as RegularTask, _ as ImportantTask):
-			return false
-		case (let task1 as ImportantTask, let task2 as ImportantTask):
-			guard task1.priority != task2.priority else { return task1 > task2 }
-			return task1.priority > task2.priority
-		case (let task1 as RegularTask, let task2 as RegularTask):
-			return task1 > task2
-		default:
-			return true
 		}
 	}
 }
