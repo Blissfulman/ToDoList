@@ -53,7 +53,7 @@ final class TaskListPresenter: ITaskListPresenter {
 			numberOfSections: taskListDataSourceAdaptor.numberOfSections,
 			titlesInSections: taskListDataSourceAdaptor.titlesInSections,
 			numberOfTasksInSections: taskListDataSourceAdaptor.numberOfTasksInSections,
-			taskModelsByIndexPaths: taskListDataSourceAdaptor.taskModelsByIndexPaths
+			taskModelsBySections: taskListDataSourceAdaptor.taskModelsBySections
 		)
 		view?.renderData(viewData: tasklistViewData)
 	}
@@ -65,9 +65,5 @@ extension TaskListPresenter: ITaskListDataSourceAdaptorDelegate {
 
 	var isSeparatelyCompletedTasks: Bool {
 		true
-	}
-
-	var sortingOption: SortingOption {
-		.priority
 	}
 }

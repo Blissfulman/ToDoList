@@ -24,12 +24,12 @@ struct TaskListViewData {
 	let shouldReloadTableData: Bool
 	/// Количество секций.
 	let numberOfSections: Int
-	/// Заголовки секций. Ключ словаря — номер секции, значение — заголовок.
-	let titlesInSections: [Int: String]
-	/// Количество задач в секциях. Ключ словаря — номер секции, значение — количество задач.
-	let numberOfTasksInSections: [Int: Int]
-	/// Модели задач, соответствующие IndexPath-ам ячеек таблицы. Ключ словаря — IndexPath ячейки, значение — модель задачи.
-	let taskModelsByIndexPaths: [IndexPath: Task]
+	/// Заголовки секций.
+	let titlesInSections: [String]
+	/// Количество задач в секциях.
+	let numberOfTasksInSections: [Int]
+	/// Модели задач. Элементы массива соответствуют секциям. Элементы вложенных массивов соответствуют задачам, расположенным в этих секциях.
+	let taskModelsBySections: [[Task]]
 }
 
 private enum Constants {
@@ -111,15 +111,15 @@ extension TaskListViewController: UITableViewDataSource {
 	}
 
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		viewData?.titlesInSections[section]
+		viewData?.titlesInSections[safe: section]
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		viewData?.numberOfTasksInSections[section] ?? 0
+		viewData?.numberOfTasksInSections[safe: section] ?? 0
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		guard let task = viewData?.taskModelsByIndexPaths[indexPath] else { return UITableViewCell() }
+		guard let task = viewData?.taskModelsBySections[safe: indexPath.section]?[safe: indexPath.row] else { return UITableViewCell() }
 
 		if let task = task as? RegularTask,
 		   let cell = tableView.dequeue(type: RegularTaskTableViewCell.self, for: indexPath) {

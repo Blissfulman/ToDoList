@@ -13,8 +13,7 @@ final class TaskListAssembly {
 		let taskManager = TaskManager()
 		// Временно для тестирования
 		let taskListDataSourceAdaptor = TaskListDataSourceAdaptor(
-			taskManager: taskManager,
-			prioritySortedTaskManagerDecorator: PrioritySortedTaskManagerDecorator(taskManager: taskManager),
+			taskManager: PrioritySortedTaskManagerDecorator(taskManager: taskManager),
 			taskRepository: TaskRepositoryStub()
 		)
 		let presenter = TaskListPresenter(taskListDataSourceAdaptor: taskListDataSourceAdaptor)

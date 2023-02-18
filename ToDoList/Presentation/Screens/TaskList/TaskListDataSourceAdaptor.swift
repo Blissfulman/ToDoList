@@ -11,8 +11,6 @@ import Foundation
 protocol ITaskListDataSourceAdaptorDelegate: AnyObject {
 	/// Определяет необходимость разделения завершённых и незавершённых задач в разные секции.
 	var isSeparatelyCompletedTasks: Bool { get }
-	/// Определяет основание для сортировки `SortingOption`.
-	var sortingOption: SortingOption { get }
 }
 
 protocol ITaskListDataSourceAdaptor: AnyObject {
@@ -20,25 +18,17 @@ protocol ITaskListDataSourceAdaptor: AnyObject {
 	var delegate: ITaskListDataSourceAdaptorDelegate? { get set }
 	/// Количество секций.
 	var numberOfSections: Int { get }
-	/// Заголовки секций. Ключ словаря — номер секции, значение — заголовок.
-	var titlesInSections: [Int: String] { get }
-	/// Количество задач в секциях. Ключ словаря — номер секции, значение — количество задач.
-	var numberOfTasksInSections: [Int: Int] { get }
-	/// Модели задач, соответствующие IndexPath-ам ячеек таблицы. Ключ словаря — IndexPath ячейки, значение — модель задачи.
-	var taskModelsByIndexPaths: [IndexPath: Task] { get }
+	/// Заголовки секций.
+	var titlesInSections: [String] { get }
+	/// Количество задач в секциях.
+	var numberOfTasksInSections: [Int] { get }
+	/// Модели задач. Элементы массива соответствуют секциям. Элементы вложенных массивов соответствуют задачам, расположенным в этих секциях.
+	var taskModelsBySections: [[Task]] { get }
 	
 	/// Получение индекса задачи по модели.
 	/// - Parameter task: Задача `Task`.
 	/// - Returns: При обнаружении в списке переданной задачи возвращается её индекс в списке, в противном случае — `nil`.
 	func indexPath(for task: Task) -> IndexPath?
-}
-
-/// Вариант сортировки задач.
-enum SortingOption {
-	/// Без сортировки.
-	case none
-	/// Сортировка по приоритету.
-	case priority
 }
 
 private enum Constants {
@@ -52,32 +42,14 @@ final class TaskListDataSourceAdaptor: ITaskListDataSourceAdaptor {
 	// Properties
 	weak var delegate: ITaskListDataSourceAdaptorDelegate?
 	private let taskManager: ITaskManager
-	private let prioritySortedTaskManagerDecorator: ITaskManager
 	private let taskRepository: ITaskRepository
 
 	private var isSeparatelyCompletedTasks: Bool {
 		delegate?.isSeparatelyCompletedTasks ?? false
 	}
-	private var sortingOption: SortingOption {
-		delegate?.sortingOption ?? .none
-	}
-	private var allTasks: [Task] {
-		sortingOption == .priority ? prioritySortedTaskManagerDecorator.allTasks : taskManager.allTasks
-	}
-	private var completedTasks: [Task] {
-		sortingOption == .priority ? prioritySortedTaskManagerDecorator.completedTasks : taskManager.completedTasks
-	}
-	private var uncompletedTasks: [Task] {
-		sortingOption == .priority ? prioritySortedTaskManagerDecorator.uncompletedTasks : taskManager.uncompletedTasks
-	}
 
-	init(
-		taskManager: ITaskManager,
-		prioritySortedTaskManagerDecorator: ITaskManager,
-		taskRepository: ITaskRepository
-	) {
+	init(taskManager: ITaskManager, taskRepository: ITaskRepository) {
 		self.taskManager = taskManager
-		self.prioritySortedTaskManagerDecorator = prioritySortedTaskManagerDecorator
 		self.taskRepository = taskRepository
 		prepareData()
 	}
@@ -100,42 +72,37 @@ final class TaskListDataSourceAdaptor: ITaskListDataSourceAdaptor {
 		isSeparatelyCompletedTasks ? 2 : 1
 	}
 
-	var titlesInSections: [Int: String] {
+	var titlesInSections: [String] {
 		if isSeparatelyCompletedTasks {
-			return [0: Constants.uncompletedTasksSectionTitle, 1: Constants.completedTasksSectionTitle]
+			return [Constants.uncompletedTasksSectionTitle, Constants.completedTasksSectionTitle]
 		} else {
-			return [0: Constants.allTasksSectionTitle]
+			return [Constants.allTasksSectionTitle]
 		}
 	}
 
-	var numberOfTasksInSections: [Int: Int] {
+	var numberOfTasksInSections: [Int] {
 		if isSeparatelyCompletedTasks {
-			return [0: uncompletedTasks.count, 1: completedTasks.count]
+			return [taskManager.uncompletedTasks.count, taskManager.completedTasks.count]
 		} else {
-			return [0: allTasks.count]
+			return [taskManager.allTasks.count]
 		}
 	}
 
-	var taskModelsByIndexPaths: [IndexPath: Task] {
+	var taskModelsBySections: [[Task]] {
 		if isSeparatelyCompletedTasks {
-			var result = [IndexPath: Task]()
-			uncompletedTasks.enumerated().forEach { result[IndexPath(row: $0, section: 0)] = $1 }
-			completedTasks.enumerated().forEach { result[IndexPath(row: $0, section: 1)] = $1 }
-			return result
+			return [taskManager.uncompletedTasks, taskManager.completedTasks]
 		} else {
-			var result = [IndexPath: Task]()
-			allTasks.enumerated().forEach { result[IndexPath(row: $0, section: 0)] = $1 }
-			return result
+			return [taskManager.allTasks]
 		}
 	}
 
 	func indexPath(for task: Task) -> IndexPath? {
 		if isSeparatelyCompletedTasks {
-			let tasks = task.isCompleted ? completedTasks : uncompletedTasks
+			let tasks = task.isCompleted ? taskManager.completedTasks : taskManager.uncompletedTasks
 			guard let row = tasks.firstIndex(where: { $0 === task }) else { return nil }
 			return IndexPath(row: row, section: task.isCompleted ? 1 : 0)
 		} else {
-			guard let row = allTasks.firstIndex(where: { $0 === task }) else { return nil }
+			guard let row = taskManager.allTasks.firstIndex(where: { $0 === task }) else { return nil }
 			return IndexPath(row: row, section: 0)
 		}
 	}
