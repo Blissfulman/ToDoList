@@ -48,7 +48,7 @@ final class TaskListDataSourceLayout: ITaskListDataSourceLayout {
 	weak var delegate: ITaskListDataSourceLayoutDelegate?
 	private let taskManager: ITaskManager
 	private let prioritySortedTaskManagerDecorator: ITaskManager
-	private let taskRepository: AnyRepository<Task>
+	private let taskRepository: ITaskRepository
 
 	private var isSeparatelyCompletedTasks: Bool {
 		delegate?.isSeparatelyCompletedTasks ?? false
@@ -69,7 +69,7 @@ final class TaskListDataSourceLayout: ITaskListDataSourceLayout {
 	init(
 		taskManager: ITaskManager,
 		prioritySortedTaskManagerDecorator: ITaskManager,
-		taskRepository: AnyRepository<Task>
+		taskRepository: ITaskRepository
 	) {
 		self.taskManager = taskManager
 		self.prioritySortedTaskManagerDecorator = prioritySortedTaskManagerDecorator
@@ -78,10 +78,10 @@ final class TaskListDataSourceLayout: ITaskListDataSourceLayout {
 	}
 
 	private func prepareData() {
-		taskRepository.getObjectList { [weak self] result in
+		taskRepository.getTaskList { [weak self] result in
 			switch result {
-			case .success(let tasks):
-				self?.taskManager.addTasks(tasks)
+			case .success(let taskList):
+				self?.taskManager.addTasks(taskList)
 			case .failure(let error):
 				// Временно
 				print(error.localizedDescription)
