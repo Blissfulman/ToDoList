@@ -7,28 +7,54 @@
 
 import UIKit
 
+protocol ITaskListView: AnyObject {
+	/// Отображение данных на основе переданной модели.
+	/// - Parameter viewData: Модель данных вью.
+	func renderData(viewData: TaskListViewData)
+}
+
+protocol ITaskTableViewCellDelegate: AnyObject {
+	/// Уведомляет о переключении состояния выполненности задачи.
+	/// - Parameter task: Задача, у которой произошло изменение состояния выполненности.
+	func didSwitchTaskCompletionState(for task: Task)
+}
+
+struct TaskListViewData {
+	/// Следует ли производить перезагрузку данных таблицы.
+	let shouldReloadTableData: Bool
+	/// Количество секций.
+	let numberOfSections: Int
+	/// Заголовки секций. Ключ словаря — номер секции, значение — заголовок.
+	let titlesInSections: [Int: String]
+	/// Количество задач в секциях. Ключ словаря — номер секции, значение — количество задач.
+	let numberOfTasksInSections: [Int: Int]
+	/// Модели задач, соответствующие IndexPath-ам ячеек таблицы. Ключ словаря — IndexPath ячейки, значение — модель задачи.
+	let taskModelsByIndexPaths: [IndexPath: Task]
+}
+
 private enum Constants {
 	static let title = "To Do List"
 }
 
-final class TaskListViewController: UIViewController {
+final class TaskListViewController: UIViewController, ITaskListView {
 
 	// UI
 	private lazy var tasksTableView: UITableView = {
 		let tableView = UITableView(frame: .zero, style: .grouped).prepareForAutoLayout()
 		tableView.registerCell(type: RegularTaskTableViewCell.self)
 		tableView.registerCell(type: ImportantTaskTableViewCell.self)
-		tableView.dataSource = taskListDataSource
+		tableView.dataSource = self
 		return tableView
 	}()
 
 	// Properties
-	private let taskListDataSource: ITaskListDataSource
+	private var viewData: TaskListViewData?
+	private let presenter: ITaskListPresenter
 	
 	// MARK: - Init
 
-	init(taskListDataSource: ITaskListDataSource) {
-		self.taskListDataSource = taskListDataSource
+	init(presenter: ITaskListPresenter) {
+		self.presenter = presenter
 		super.init(nibName: nil, bundle: nil)
 	}
 
@@ -43,8 +69,16 @@ final class TaskListViewController: UIViewController {
 		setupUI()
 		setupLayout()
 		configureUI()
-		taskListDataSource.tableView = tasksTableView
-		tasksTableView.reloadData()
+		presenter.viewDidLoad()
+	}
+
+	// MARK: - ITaskListView
+
+	func renderData(viewData: TaskListViewData) {
+		self.viewData = viewData
+		if viewData.shouldReloadTableData {
+			tasksTableView.reloadData()
+		}
 	}
 
 	// MARK: - Private methods
@@ -65,5 +99,63 @@ final class TaskListViewController: UIViewController {
 	private func configureUI() {
 		view.backgroundColor = .white
 		title = Constants.title
+	}
+}
+
+// MARK: - UITableViewDataSource
+
+extension TaskListViewController: UITableViewDataSource {
+
+	func numberOfSections(in tableView: UITableView) -> Int {
+		viewData?.numberOfSections ?? 0
+	}
+
+	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+		viewData?.titlesInSections[section]
+	}
+
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		viewData?.numberOfTasksInSections[section] ?? 0
+	}
+
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		guard let task = viewData?.taskModelsByIndexPaths[indexPath] else { return UITableViewCell() }
+
+		if let task = task as? RegularTask,
+		   let cell = tableView.dequeue(type: RegularTaskTableViewCell.self, for: indexPath) {
+			cell.configure(with: task)
+			cell.delegate = self
+			return cell
+		} else if let task = task as? ImportantTask,
+				  let cell = tableView.dequeue(type: ImportantTaskTableViewCell.self, for: indexPath) {
+			cell.configure(with: task)
+			cell.delegate = self
+			return cell
+		} else {
+			return UITableViewCell()
+		}
+	}
+}
+
+// MARK: - ITaskTableViewCellDelegate
+
+extension TaskListViewController: ITaskTableViewCellDelegate {
+
+	func didSwitchTaskCompletionState(for task: Task) {
+		guard let cellIndexBeforeUpdating = presenter.indexPath(for: task) else {
+			tasksTableView.reloadData()
+			return
+		}
+		task.isCompleted.toggle()
+		guard let cellIndexAfterUpdating = presenter.indexPath(for: task) else {
+			tasksTableView.reloadData()
+			return
+		}
+		presenter.invokeUpdateViewData(shouldReloadTableData: false)
+		tasksTableView.performBatchUpdates({
+			tasksTableView.moveRow(at: cellIndexBeforeUpdating, to: cellIndexAfterUpdating)
+		}, completion: { [weak self] _ in
+			self?.tasksTableView.reloadRows(at: [cellIndexAfterUpdating], with: .automatic)
+		})
 	}
 }

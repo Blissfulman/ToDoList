@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Менеджер задач.
 protocol ITaskManager: AnyObject {
 	/// Все задачи.
 	var allTasks: [Task] { get }
@@ -19,7 +20,7 @@ protocol ITaskManager: AnyObject {
 	/// - Parameter task: Задача, которую необходимо добавить.
 	func addTask(_ task: Task)
 	/// Добавлние задач.
-	/// - Parameter tasks: Задачи для загрузки.
+	/// - Parameter tasks: Задачи, которые необходимо добавить.
 	func addTasks(_ tasks: [Task])
 	/// Удаление задачи.
 	/// - Parameter task: Задача, которую необходимо удалить.

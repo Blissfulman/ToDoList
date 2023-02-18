@@ -141,6 +141,6 @@ final class ImportantTaskTableViewCell: UITableViewCell, IConfigurableTableCell 
 
 	@objc private func didTapCheckbox() {
 		guard let task = task else { return }
-		delegate?.didSwitchTaskCompletedState(for: task)
+		delegate?.didSwitchTaskCompletionState(for: task)
 	}
 }

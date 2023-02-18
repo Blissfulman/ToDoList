@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Декоратор менеджера задач, который управляет задачами с учётом их сортировки по приоритету.
 final class PrioritySortedTaskManagerDecorator: ITaskManager {
 
 	// Properties
@@ -48,6 +49,9 @@ final class PrioritySortedTaskManagerDecorator: ITaskManager {
 
 private extension Array where Element == Task {
 
+	// Обеспечивает сортировку, при которой важные задачи располагаются первее обычных (первый критерий),
+	// важные с более высоким приоритетом первее важных с более низким приоритетом (второй критерий),
+	// а невыполненные первее выполненных (третий критерий)
 	func sortedByPriority() -> [Task] {
 		self.sorted(by: { task1, task2 in
 			switch (task1, task2) {
@@ -56,10 +60,10 @@ private extension Array where Element == Task {
 			case (_ as RegularTask, _ as ImportantTask):
 				return false
 			case (let task1 as ImportantTask, let task2 as ImportantTask):
-				guard task1.priority != task2.priority else { return task1 > task2 }
+				guard task1.priority != task2.priority else { return task1.isCompleted == false }
 				return task1.priority > task2.priority
-			case (let task1 as RegularTask, let task2 as RegularTask):
-				return task1 > task2
+			case (let task1 as RegularTask, _ as RegularTask):
+				return task1.isCompleted == false
 			default:
 				return true
 			}

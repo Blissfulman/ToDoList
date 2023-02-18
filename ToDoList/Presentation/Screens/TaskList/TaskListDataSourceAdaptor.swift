@@ -1,5 +1,5 @@
 //
-//  TaskListDataSourceLayout.swift
+//  TaskListDataSourceAdaptor.swift
 //  ToDoList
 //
 //  Created by Evgeniy Novgorodov on 15.02.2023.
@@ -7,27 +7,26 @@
 
 import Foundation
 
-protocol ITaskListDataSourceLayoutDelegate: AnyObject {
+/// Протокол адаптера, делегирующий способ представления задач. Предоставляет интерфейс для выбора способа представления данных.
+protocol ITaskListDataSourceAdaptorDelegate: AnyObject {
 	/// Определяет необходимость разделения завершённых и незавершённых задач в разные секции.
 	var isSeparatelyCompletedTasks: Bool { get }
 	/// Определяет основание для сортировки `SortingOption`.
 	var sortingOption: SortingOption { get }
 }
 
-protocol ITaskListDataSourceLayout: AnyObject {
-	/// Делегат `ITaskListDataSourceLayoutDelegate`.
-	var delegate: ITaskListDataSourceLayoutDelegate? { get set }
+protocol ITaskListDataSourceAdaptor: AnyObject {
+	/// Делегат `ITaskListDataSourceAdaptorDelegate`.
+	var delegate: ITaskListDataSourceAdaptorDelegate? { get set }
 	/// Количество секций.
 	var numberOfSections: Int { get }
-
-	/// Количество задач в переданной секции.
-	/// - Parameter section: Номер секции.
-	/// - Returns:Количество задач.
-	func numberOfTasks(in section: Int) -> Int
-	/// Получение модели задачи по индексу.
-	/// - Parameter index: Индекс.
-	/// - Returns: При наличии задачи по переданному индексу возвращается задача `Task`, в противном случае — `nil`.
-	func task(at indexPath: IndexPath) -> Task?
+	/// Заголовки секций. Ключ словаря — номер секции, значение — заголовок.
+	var titlesInSections: [Int: String] { get }
+	/// Количество задач в секциях. Ключ словаря — номер секции, значение — количество задач.
+	var numberOfTasksInSections: [Int: Int] { get }
+	/// Модели задач, соответствующие IndexPath-ам ячеек таблицы. Ключ словаря — IndexPath ячейки, значение — модель задачи.
+	var taskModelsByIndexPaths: [IndexPath: Task] { get }
+	
 	/// Получение индекса задачи по модели.
 	/// - Parameter task: Задача `Task`.
 	/// - Returns: При обнаружении в списке переданной задачи возвращается её индекс в списке, в противном случае — `nil`.
@@ -42,10 +41,16 @@ enum SortingOption {
 	case priority
 }
 
-final class TaskListDataSourceLayout: ITaskListDataSourceLayout {
+private enum Constants {
+	static let allTasksSectionTitle = "All tasks"
+	static let completedTasksSectionTitle = "Completed tasks"
+	static let uncompletedTasksSectionTitle = "Uncompleted tasks"
+}
+
+final class TaskListDataSourceAdaptor: ITaskListDataSourceAdaptor {
 
 	// Properties
-	weak var delegate: ITaskListDataSourceLayoutDelegate?
+	weak var delegate: ITaskListDataSourceAdaptorDelegate?
 	private let taskManager: ITaskManager
 	private let prioritySortedTaskManagerDecorator: ITaskManager
 	private let taskRepository: ITaskRepository
@@ -95,20 +100,32 @@ final class TaskListDataSourceLayout: ITaskListDataSourceLayout {
 		isSeparatelyCompletedTasks ? 2 : 1
 	}
 
-	func numberOfTasks(in section: Int) -> Int {
+	var titlesInSections: [Int: String] {
 		if isSeparatelyCompletedTasks {
-			return section == 0 ? uncompletedTasks.count : completedTasks.count
+			return [0: Constants.uncompletedTasksSectionTitle, 1: Constants.completedTasksSectionTitle]
 		} else {
-			return allTasks.count
+			return [0: Constants.allTasksSectionTitle]
 		}
 	}
 
-	func task(at indexPath: IndexPath) -> Task? {
+	var numberOfTasksInSections: [Int: Int] {
 		if isSeparatelyCompletedTasks {
-			let tasks = indexPath.section == 0 ? uncompletedTasks : completedTasks
-			return tasks[safe: indexPath.row]
+			return [0: uncompletedTasks.count, 1: completedTasks.count]
 		} else {
-			return allTasks[safe: indexPath.row]
+			return [0: allTasks.count]
+		}
+	}
+
+	var taskModelsByIndexPaths: [IndexPath: Task] {
+		if isSeparatelyCompletedTasks {
+			var result = [IndexPath: Task]()
+			uncompletedTasks.enumerated().forEach { result[IndexPath(row: $0, section: 0)] = $1 }
+			completedTasks.enumerated().forEach { result[IndexPath(row: $0, section: 1)] = $1 }
+			return result
+		} else {
+			var result = [IndexPath: Task]()
+			allTasks.enumerated().forEach { result[IndexPath(row: $0, section: 0)] = $1 }
+			return result
 		}
 	}
 
