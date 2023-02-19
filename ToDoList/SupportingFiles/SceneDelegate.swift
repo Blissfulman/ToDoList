@@ -9,8 +9,7 @@ import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
-	// MARK: - Properties
-
+	// Properties
 	var window: UIWindow?
 
 	// MARK: - Lifecycle
@@ -19,8 +18,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		guard let windowScene = (scene as? UIWindowScene) else { return }
 
 		window = UIWindow(windowScene: windowScene)
-		let viewController = ViewController()
-		let rootNavigationController = UINavigationController(rootViewController: viewController)
+		let rootViewController = TaskListAssembly().assemble()
+		let rootNavigationController = UINavigationController(rootViewController: rootViewController)
 		self.window?.rootViewController = rootNavigationController
 		self.window?.makeKeyAndVisible()
 	}
