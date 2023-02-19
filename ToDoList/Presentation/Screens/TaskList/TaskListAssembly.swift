@@ -11,12 +11,11 @@ final class TaskListAssembly {
 
 	func assemble() -> UIViewController {
 		let taskManager = TaskManager()
-		// Временно для тестирования
-		let taskListDataSourceAdaptor = TaskListDataSourceAdaptor(
+		let taskListSectionsAdaptor = TaskListSectionsAdaptor(
 			taskManager: PrioritySortedTaskManagerDecorator(taskManager: taskManager),
 			taskRepository: TaskRepositoryStub()
 		)
-		let presenter = TaskListPresenter(taskListDataSourceAdaptor: taskListDataSourceAdaptor)
+		let presenter = TaskListPresenter(taskListSectionsAdaptor: taskListSectionsAdaptor)
 		let viewController = TaskListViewController(presenter: presenter)
 		presenter.view = viewController
 		return viewController

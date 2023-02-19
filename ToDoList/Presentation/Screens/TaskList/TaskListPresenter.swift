@@ -22,23 +22,28 @@ final class TaskListPresenter: ITaskListPresenter {
 
 	// Properties
 	weak var view: ITaskListView?
-	private let taskListDataSourceAdaptor: ITaskListDataSourceAdaptor
+	private let taskListSectionsAdaptor: ITaskListSectionsAdaptor
+	private var sectionModels = [TaskListSectionModel]()
 
 	// MARK: - Init
 
-	init(taskListDataSourceAdaptor: ITaskListDataSourceAdaptor) {
-		self.taskListDataSourceAdaptor = taskListDataSourceAdaptor
+	init(taskListSectionsAdaptor: ITaskListSectionsAdaptor) {
+		self.taskListSectionsAdaptor = taskListSectionsAdaptor
 	}
 	
 	// MARK: - ITaskListPresenter
 	
 	func viewDidLoad() {
-		taskListDataSourceAdaptor.delegate = self
 		updateViewData()
 	}
 
 	func indexPath(for task: Task) -> IndexPath? {
-		taskListDataSourceAdaptor.indexPath(for: task)
+		var indexPath: IndexPath?
+		taskListSectionsAdaptor.sectionModels.enumerated().forEach { sectionIndex, sectionModel in
+			guard let rowIndex = sectionModel.taskModels.firstIndex(where: { task === $0 }) else { return }
+			indexPath = IndexPath(row: rowIndex, section: sectionIndex)
+		}
+		return indexPath
 	}
 
 	func invokeUpdateViewData(shouldReloadTableData: Bool) {
@@ -48,22 +53,12 @@ final class TaskListPresenter: ITaskListPresenter {
 	// MARK: - Private methods
 
 	private func updateViewData(shouldReloadTableData: Bool = true) {
+		sectionModels = taskListSectionsAdaptor.sectionModels
+
 		let tasklistViewData = TaskListViewData(
 			shouldReloadTableData: shouldReloadTableData,
-			numberOfSections: taskListDataSourceAdaptor.numberOfSections,
-			titlesInSections: taskListDataSourceAdaptor.titlesInSections,
-			numberOfTasksInSections: taskListDataSourceAdaptor.numberOfTasksInSections,
-			taskModelsBySections: taskListDataSourceAdaptor.taskModelsBySections
+			sectionModels: sectionModels
 		)
 		view?.renderData(viewData: tasklistViewData)
-	}
-}
-
-// MARK: - ITaskListDataSourceAdaptorDelegate
-
-extension TaskListPresenter: ITaskListDataSourceAdaptorDelegate {
-
-	var isSeparatelyCompletedTasks: Bool {
-		true
 	}
 }

@@ -22,14 +22,8 @@ protocol ITaskTableViewCellDelegate: AnyObject {
 struct TaskListViewData {
 	/// Следует ли производить перезагрузку данных таблицы.
 	let shouldReloadTableData: Bool
-	/// Количество секций.
-	let numberOfSections: Int
-	/// Заголовки секций.
-	let titlesInSections: [String]
-	/// Количество задач в секциях.
-	let numberOfTasksInSections: [Int]
-	/// Модели задач. Элементы массива соответствуют секциям. Элементы вложенных массивов соответствуют задачам, расположенным в этих секциях.
-	let taskModelsBySections: [[Task]]
+	/// Список моделей секций.
+	var sectionModels: [TaskListSectionModel]
 }
 
 private enum Constants {
@@ -107,19 +101,19 @@ final class TaskListViewController: UIViewController, ITaskListView {
 extension TaskListViewController: UITableViewDataSource {
 
 	func numberOfSections(in tableView: UITableView) -> Int {
-		viewData?.numberOfSections ?? 0
+		viewData?.sectionModels.count ?? 0
 	}
 
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		viewData?.titlesInSections[safe: section]
+		viewData?.sectionModels[safe: section]?.title
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		viewData?.numberOfTasksInSections[safe: section] ?? 0
+		viewData?.sectionModels[safe: section]?.taskModels.count ?? 0
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		guard let task = viewData?.taskModelsBySections[safe: indexPath.section]?[safe: indexPath.row] else { return UITableViewCell() }
+		guard let task = viewData?.sectionModels[safe: indexPath.section]?.taskModels[safe: indexPath.row] else { return UITableViewCell() }
 
 		if let task = task as? RegularTask,
 		   let cell = tableView.dequeue(type: RegularTaskTableViewCell.self, for: indexPath) {
