@@ -28,6 +28,7 @@
 		5EC7537729A00548002A6775 /* PrioritySortedTaskManagerDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EC7537629A00548002A6775 /* PrioritySortedTaskManagerDecorator.swift */; };
 		5EC7537929A0CABD002A6775 /* TaskListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EC7537829A0CABD002A6775 /* TaskListPresenter.swift */; };
 		5EC7537B29A1DE4E002A6775 /* TaskListSectionsAdaptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EC7537A29A1DE4E002A6775 /* TaskListSectionsAdaptor.swift */; };
+		5EC7537E29A205C1002A6775 /* ITaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EC7537D29A205C1002A6775 /* ITaskManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +55,7 @@
 		5EC7537629A00548002A6775 /* PrioritySortedTaskManagerDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrioritySortedTaskManagerDecorator.swift; sourceTree = "<group>"; };
 		5EC7537829A0CABD002A6775 /* TaskListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListPresenter.swift; sourceTree = "<group>"; };
 		5EC7537A29A1DE4E002A6775 /* TaskListSectionsAdaptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListSectionsAdaptor.swift; sourceTree = "<group>"; };
+		5EC7537D29A205C1002A6775 /* ITaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ITaskManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,21 +85,13 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		5E075CFD299D2E6D005FE58E /* Repositories */ = {
+		5E075CFD299D2E6D005FE58E /* TaskRepositories */ = {
 			isa = PBXGroup;
 			children = (
 				5E075CFE299D2E9C005FE58E /* ITaskRepository.swift */,
 				5E075D01299D3352005FE58E /* TaskRepositoryStub.swift */,
 			);
-			path = Repositories;
-			sourceTree = "<group>";
-		};
-		5E075D07299D3EC4005FE58E /* Managers */ = {
-			isa = PBXGroup;
-			children = (
-				5E0D55ED299787BB00F9276E /* TaskManager */,
-			);
-			path = Managers;
+			path = TaskRepositories;
 			sourceTree = "<group>";
 		};
 		5E0D55C929977A8500F9276E = {
@@ -160,19 +154,20 @@
 		5E0D55EC29977F8000F9276E /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				5E075CFD299D2E6D005FE58E /* Repositories */,
-				5E075D07299D3EC4005FE58E /* Managers */,
+				5E075CFD299D2E6D005FE58E /* TaskRepositories */,
+				5E0D55ED299787BB00F9276E /* TaskManagers */,
 			);
 			path = Core;
 			sourceTree = "<group>";
 		};
-		5E0D55ED299787BB00F9276E /* TaskManager */ = {
+		5E0D55ED299787BB00F9276E /* TaskManagers */ = {
 			isa = PBXGroup;
 			children = (
+				5EC7537D29A205C1002A6775 /* ITaskManager.swift */,
 				5E0D55EE299787C700F9276E /* TaskManager.swift */,
 				5EC7537629A00548002A6775 /* PrioritySortedTaskManagerDecorator.swift */,
 			);
-			path = TaskManager;
+			path = TaskManagers;
 			sourceTree = "<group>";
 		};
 		5E0D55F0299787F700F9276E /* Model */ = {
@@ -326,6 +321,7 @@
 				5E075CFF299D2E9C005FE58E /* ITaskRepository.swift in Sources */,
 				5E0D55F52998213A00F9276E /* RegularTask.swift in Sources */,
 				5E0D55D629977A8600F9276E /* AppDelegate.swift in Sources */,
+				5EC7537E29A205C1002A6775 /* ITaskManager.swift in Sources */,
 				5E0D55F32997881200F9276E /* Task.swift in Sources */,
 				5E0D56042998E49800F9276E /* ConfigurableTableCell.swift in Sources */,
 				5EC7537729A00548002A6775 /* PrioritySortedTaskManagerDecorator.swift in Sources */,
