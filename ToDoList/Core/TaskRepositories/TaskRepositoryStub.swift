@@ -1,5 +1,5 @@
 //
-//  TaskRepository.swift
+//  TaskRepositoryStub.swift
 //  ToDoList
 //
 //  Created by Evgeniy Novgorodov on 15.02.2023.
@@ -7,41 +7,25 @@
 
 import Foundation
 
-final class TaskMockRepository: IRepository {
+/// Репозиторий, предоставляющий задачи для тестирования.
+final class TaskRepositoryStub: ITaskRepository {
 
-	typealias Object = Task
+	// MARK: - ITaskRepository
 
-	// MARK: - IRepository
-
-	func getObjectList(completion: @escaping (Result<[Object], Error>) -> Void) {
-		completion(.success(TaskMockRepository.mockTasks))
+	func getTaskList(completion: @escaping (Result<[Task], Error>) -> Void) {
+		completion(.success(TaskRepositoryStub.stubTasks))
 	}
 }
 
-private extension TaskMockRepository {
+private extension TaskRepositoryStub {
 
 	// Временный метод для тестирования
-	static var mockTasks: [Task] {
-		let mockTasks: [Task] = mockRegularTasks + mockImportantTasks
-		mockTasks
-			.enumerated()
-			.forEach { $1.isCompleted = $0.isMultiple(of: 2) }
-		return mockTasks.shuffled()
-	}
-
-	// Временный метод для тестирования
-	static var mockRegularTasks: [RegularTask] {
-		[
+	static var stubTasks: [Task] {
+		let tasks: [Task] = [
 			RegularTask(title: "To clean the room"),
 			RegularTask(title: "Learning English"),
 			RegularTask(title: "Walk"),
-			RegularTask(title: "To wash the dishes")
-		]
-	}
-
-	// Временный метод для тестирования
-	static var mockImportantTasks: [ImportantTask] {
-		[
+			RegularTask(title: "To wash the dishes"),
 			ImportantTask(
 				title: "Workout",
 				creationDate: Calendar.current.date(byAdding: DateComponents(day: -2), to: Date())!,
@@ -68,5 +52,9 @@ private extension TaskMockRepository {
 				priority: .low
 			)
 		]
+		tasks
+			.enumerated()
+			.forEach { $1.isCompleted = $0.isMultiple(of: 2) }
+		return tasks.shuffled()
 	}
 }

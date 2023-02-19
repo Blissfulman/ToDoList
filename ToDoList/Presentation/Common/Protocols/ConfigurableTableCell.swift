@@ -7,10 +7,11 @@
 
 import UIKit
 
+/// Конфигурируемая ячейка таблицы.
 protocol IConfigurableTableCell: UITableViewCell {
 	associatedtype ConfigurationModel
 
-	/// Конфигурация яцейки.
+	/// Конфигурация ячейки.
 	/// - Parameter model: Модель данных ячейки.
 	func configure(with model: ConfigurationModel)
 }

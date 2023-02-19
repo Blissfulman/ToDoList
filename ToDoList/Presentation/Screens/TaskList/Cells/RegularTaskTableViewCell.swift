@@ -37,7 +37,7 @@ final class RegularTaskTableViewCell: UITableViewCell, IConfigurableTableCell {
 	private var task: ConfigurationModel?
 	weak var delegate: ITaskTableViewCellDelegate?
 
-	// MARK: - Init
+	// MARK: - Initialization
 
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -98,6 +98,6 @@ final class RegularTaskTableViewCell: UITableViewCell, IConfigurableTableCell {
 
 	@objc private func didTapCheckbox() {
 		guard let task = task else { return }
-		delegate?.didSwitchTaskCompletedState(for: task)
+		delegate?.didSwitchTaskCompletionState(for: task)
 	}
 }

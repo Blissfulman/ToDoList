@@ -11,6 +11,7 @@ final class ImportantTask: Task {
 
 	// MARK: - Nested types
 
+	/// Приоритет задачи.
 	enum Priority: Comparable {
 		case low
 		case medium
@@ -18,9 +19,11 @@ final class ImportantTask: Task {
 	}
 
 	// Properties
+	/// Приоритет.
 	let priority: Priority
 	private let creationDate: Date
 
+	/// Крайняя дата выполнения задачи (дедлайн).
 	var executionDate: Date? {
 		switch priority {
 		case .low:
@@ -32,6 +35,7 @@ final class ImportantTask: Task {
 		}
 	}
 
+	/// Истёк ли срок выполнения задачи.
 	var isExpired: Bool {
 		// Сравнение со вчерашним днём, чтобы задача с дедлайном на сегодня не считалась с уже истёкшим сроком дедлайна
 		guard let executionDate = executionDate,
@@ -39,7 +43,7 @@ final class ImportantTask: Task {
 		return executionDate < currentDate
 	}
 
-	// MARK: - Init
+	// MARK: - Initialization
 
 	init(title: String, creationDate: Date, priority: Priority) {
 		self.creationDate = creationDate
