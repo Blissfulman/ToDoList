@@ -37,7 +37,7 @@ final class RegularTaskTableViewCell: UITableViewCell, IConfigurableTableCell {
 	private var task: ConfigurationModel?
 	weak var delegate: ITaskTableViewCellDelegate?
 
-	// MARK: - Init
+	// MARK: - Initialization
 
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)

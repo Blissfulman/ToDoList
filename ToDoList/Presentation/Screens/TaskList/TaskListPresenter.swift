@@ -25,7 +25,7 @@ final class TaskListPresenter: ITaskListPresenter {
 	private let taskListSectionsAdaptor: ITaskListSectionsAdaptor
 	private var sectionModels = [TaskListSectionModel]()
 
-	// MARK: - Init
+	// MARK: - Initialization
 
 	init(taskListSectionsAdaptor: ITaskListSectionsAdaptor) {
 		self.taskListSectionsAdaptor = taskListSectionsAdaptor

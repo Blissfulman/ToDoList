@@ -38,7 +38,7 @@ final class TaskListSectionsAdaptor: ITaskListSectionsAdaptor {
 	private let taskManager: ITaskManager
 	private let taskRepository: ITaskRepository
 
-	// MARK: - Init
+	// MARK: - Initialization
 
 	init(taskManager: ITaskManager, taskRepository: ITaskRepository) {
 		self.taskManager = taskManager
@@ -68,7 +68,7 @@ final class TaskListSectionsAdaptor: ITaskListSectionsAdaptor {
 		}
 	}
 
-	func sectionModel(for section: TaskListSection) -> TaskListSectionModel {
+	private func sectionModel(for section: TaskListSection) -> TaskListSectionModel {
 		switch section {
 		case .uncompletedTasks:
 			return TaskListSectionModel(title: Constants.uncompletedTasksSectionTitle, taskModels: taskManager.uncompletedTasks)

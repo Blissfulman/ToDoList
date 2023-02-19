@@ -13,7 +13,7 @@ final class PrioritySortedTaskManagerDecorator: ITaskManager {
 	// Properties
 	private let taskManager: ITaskManager
 
-	// MARK: - Init
+	// MARK: - Initialization
 
 	init(taskManager: ITaskManager) {
 		self.taskManager = taskManager

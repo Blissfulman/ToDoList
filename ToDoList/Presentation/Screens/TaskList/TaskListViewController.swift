@@ -45,7 +45,7 @@ final class TaskListViewController: UIViewController, ITaskListView {
 	private var viewData: TaskListViewData?
 	private let presenter: ITaskListPresenter
 	
-	// MARK: - Init
+	// MARK: - Initialization
 
 	init(presenter: ITaskListPresenter) {
 		self.presenter = presenter

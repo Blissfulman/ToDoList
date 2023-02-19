@@ -10,10 +10,12 @@ import Foundation
 class Task {
 
 	// Properties
+	/// Заголовок.
 	var title: String
+	/// Выполнена ли задача.
 	var isCompleted = false
 
-	// MARK: - Init
+	// MARK: - Initialization
 
 	init(title: String) {
 		self.title = title
