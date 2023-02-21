@@ -9,34 +9,17 @@ import UIKit
 
 private enum Constants {
 	static let titleLabelNumberOfLines: Int = 2
-	static let completedCheckboxImageName = "checkmark.circle.fill"
-	static let uncompletedCheckboxImageName = "circle"
 	static let expiredTaskBackgroundColor: UIColor = .red.withAlphaComponent(0.2)
 	static let unexpiredTaskBackgroundColor: UIColor = .white
-	static let priorityLabelText = "Priority: "
 	static let contentVerticalInset: CGFloat = 12
 	static let contentHorizontalInset: CGFloat = 16
 	static let contentSpace: CGFloat = 12
 	static let checkboxImageViewSize: CGFloat = 32
 }
 
-private extension ImportantTask.Priority {
-
-	var description: String {
-		switch self {
-		case .low:
-			return "low"
-		case .medium:
-			return "medium"
-		case .high:
-			return "high"
-		}
-	}
-}
-
 final class ImportantTaskTableViewCell: UITableViewCell, IConfigurableTableCell {
 
-	typealias ConfigurationModel = ImportantTask
+	typealias ConfigurationModel = TaskListModel.ViewModel.ImportantTask
 
 	// UI
 	private lazy var checkboxImageView: UIImageView = {
@@ -61,8 +44,7 @@ final class ImportantTaskTableViewCell: UITableViewCell, IConfigurableTableCell 
 	}()
 
 	// Properties
-	private var task: ConfigurationModel?
-	weak var delegate: ITaskTableViewCellDelegate?
+	private var model: ConfigurationModel?
 
 	// MARK: - Initialization
 
@@ -91,12 +73,12 @@ final class ImportantTaskTableViewCell: UITableViewCell, IConfigurableTableCell 
 	// MARK: - IConfigurableTableCell
 
 	func configure(with model: ConfigurationModel) {
-		task = model
+		self.model = model
 		titleLabel.text = model.title
-		checkboxImageView.image = UIImage(systemName: model.isCompleted ? Constants.completedCheckboxImageName : Constants.uncompletedCheckboxImageName)
+		checkboxImageView.image = UIImage(systemName: model.checkboxImageName)
 		contentView.backgroundColor = model.isExpired ? Constants.expiredTaskBackgroundColor : Constants.unexpiredTaskBackgroundColor
-		priorityLabel.text = Constants.priorityLabelText + model.priority.description
-		executionDateLabel.text = model.executionDate?.formatted(date: .numeric, time: .omitted)
+		priorityLabel.text = model.priorityText
+		executionDateLabel.text = model.executionDate
 	}
 
 	// MARK: - Private methods
@@ -140,7 +122,7 @@ final class ImportantTaskTableViewCell: UITableViewCell, IConfigurableTableCell 
 	}
 
 	@objc private func didTapCheckbox() {
-		guard let task = task else { return }
-		delegate?.didSwitchTaskCompletionState(for: task)
+		guard let model = model else { return }
+		model.output.taskCompletionStateDidChange(for: model)
 	}
 }
