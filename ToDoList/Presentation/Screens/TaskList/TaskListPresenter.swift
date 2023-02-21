@@ -10,25 +10,25 @@ import Foundation
 protocol ITaskListPresenter: AnyObject {
 	/// Вью загружено.
 	func viewDidLoad()
-	/// Получение индекса задачи по модели.
-	/// - Parameter task: Задача `Task`.
-	/// - Returns: При обнаружении в списке переданной задачи возвращается её индекс в списке, в противном случае — `nil`.
-	func indexPath(for task: Task) -> IndexPath?
-	/// Вызов обновления данных во вью.
-	func invokeUpdateViewData(shouldReloadTableData: Bool)
+}
+
+protocol ITaskTableViewCellOutput: AnyObject {
+	/// Уведомляет о изменении состояния выполненности задачи.
+	/// - Parameter model: Модель задачи, у которой произошло изменение состояния выполненности.
+	func taskCompletionStateDidChange(for model: AnyHashable)
 }
 
 final class TaskListPresenter: ITaskListPresenter {
 
 	// Properties
 	weak var view: ITaskListView?
-	private let taskListSectionsAdaptor: ITaskListSectionsAdaptor
-	private var sectionModels = [TaskListSectionModel]()
+	private let taskListSectionsAdapter: ITaskListSectionsAdapter
+	private var sectionModels = [TaskListModel.ViewModel.Section]()
 
 	// MARK: - Initialization
 
-	init(taskListSectionsAdaptor: ITaskListSectionsAdaptor) {
-		self.taskListSectionsAdaptor = taskListSectionsAdaptor
+	init(taskListSectionsAdapter: ITaskListSectionsAdapter) {
+		self.taskListSectionsAdapter = taskListSectionsAdapter
 	}
 	
 	// MARK: - ITaskListPresenter
@@ -37,28 +37,40 @@ final class TaskListPresenter: ITaskListPresenter {
 		updateViewData()
 	}
 
-	func indexPath(for task: Task) -> IndexPath? {
+	// MARK: - Private methods
+
+	private func updateViewData() {
+		sectionModels = taskListSectionsAdapter.sectionModels(output: self)
+		view?.renderData(viewModel: TaskListModel.ViewModel(sections: sectionModels))
+	}
+
+	private func indexPath(for model: AnyHashable) -> IndexPath? {
 		var indexPath: IndexPath?
-		taskListSectionsAdaptor.sectionModels.enumerated().forEach { sectionIndex, sectionModel in
-			guard let rowIndex = sectionModel.taskModels.firstIndex(where: { task === $0 }) else { return }
+		sectionModels.enumerated().forEach { sectionIndex, sectionModel in
+			guard let rowIndex = sectionModel.tasks.firstIndex(where: { model.hashValue == $0.hashValue }) else { return }
 			indexPath = IndexPath(row: rowIndex, section: sectionIndex)
 		}
 		return indexPath
 	}
+}
 
-	func invokeUpdateViewData(shouldReloadTableData: Bool) {
-		updateViewData(shouldReloadTableData: shouldReloadTableData)
-	}
+// MARK: - ITaskTableViewCellOutput
 
-	// MARK: - Private methods
+extension TaskListPresenter: ITaskTableViewCellOutput {
+	
+	func taskCompletionStateDidChange(for model: AnyHashable) {
+		guard let oldIndexPath = indexPath(for: model),
+			  let task = taskListSectionsAdapter.task(at: oldIndexPath)
+		else { return }
+		task.isCompleted.toggle()
+		guard let newIndexPath = taskListSectionsAdapter.indexPath(for: task) else { return }
 
-	private func updateViewData(shouldReloadTableData: Bool = true) {
-		sectionModels = taskListSectionsAdaptor.sectionModels
-
-		let tasklistViewData = TaskListViewData(
-			shouldReloadTableData: shouldReloadTableData,
-			sectionModels: sectionModels
+		sectionModels = taskListSectionsAdapter.sectionModels(output: self)
+		let updateTaskModel = TaskListModel.UpdateTaskModel(
+			oldIndexPath: oldIndexPath,
+			newIndexPath: newIndexPath,
+			viewModel: TaskListModel.ViewModel(sections: sectionModels)
 		)
-		view?.renderData(viewData: tasklistViewData)
+		view?.updateTask(updateTaskModel: updateTaskModel)
 	}
 }
