@@ -9,8 +9,6 @@ import UIKit
 
 private enum Constants {
 	static let titleLabelNumberOfLines: Int = 2
-	static let completedCheckboxImageName = "checkmark.circle.fill"
-	static let uncompletedCheckboxImageName = "circle"
 	static let contentViewHeight: CGFloat = 56
 	static let contentHorizontalInset: CGFloat = 16
 	static let contentSpace: CGFloat = 12
@@ -19,7 +17,7 @@ private enum Constants {
 
 final class RegularTaskTableViewCell: UITableViewCell, IConfigurableTableCell {
 
-	typealias ConfigurationModel = RegularTask
+	typealias ConfigurationModel = TaskListModel.ViewModel.RegularTask
 
 	// UI
 	private lazy var checkboxImageView: UIImageView = {
@@ -34,8 +32,7 @@ final class RegularTaskTableViewCell: UITableViewCell, IConfigurableTableCell {
 	}()
 
 	// Properties
-	private var task: ConfigurationModel?
-	weak var delegate: ITaskTableViewCellDelegate?
+	private var model: ConfigurationModel?
 
 	// MARK: - Initialization
 
@@ -61,9 +58,9 @@ final class RegularTaskTableViewCell: UITableViewCell, IConfigurableTableCell {
 	// MARK: - IConfigurableTableCell
 
 	func configure(with model: ConfigurationModel) {
-		task = model
+		self.model = model
 		titleLabel.text = model.title
-		checkboxImageView.image = UIImage(systemName: model.isCompleted ? Constants.completedCheckboxImageName : Constants.uncompletedCheckboxImageName)
+		checkboxImageView.image = UIImage(systemName: model.checkboxImageName)
 	}
 
 	// MARK: - Private methods
@@ -97,7 +94,7 @@ final class RegularTaskTableViewCell: UITableViewCell, IConfigurableTableCell {
 	}
 
 	@objc private func didTapCheckbox() {
-		guard let task = task else { return }
-		delegate?.didSwitchTaskCompletionState(for: task)
+		guard let model = model else { return }
+		model.output.taskCompletionStateDidChange(for: model)
 	}
 }
