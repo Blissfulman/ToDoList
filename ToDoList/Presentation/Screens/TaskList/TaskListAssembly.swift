@@ -13,11 +13,11 @@ final class TaskListAssembly {
 		let presenter = TaskListPresenter()
 
 		let taskManager = TaskManager()
-		let taskListSectionsAdapter = TaskListSectionsAdapter(taskManager: PrioritySortedTaskManagerDecorator(taskManager: taskManager))
+		let taskListDataAdapter = TaskListDataAdapter(taskManager: PrioritySortedTaskManagerDecorator(taskManager: taskManager))
 		let interactor = TaskListInteractor(
 			presenter: presenter,
 			taskRepository: TaskRepositoryStub(),
-			taskListSectionsAdapter: taskListSectionsAdapter
+			taskListDataAdapter: taskListDataAdapter
 		)
 
 		let viewController = TaskListViewController(interactor: interactor)

@@ -1,5 +1,5 @@
 //
-//  TaskListSectionsAdapter.swift
+//  TaskListDataAdapter.swift
 //  ToDoList
 //
 //  Created by Evgeniy Novgorodov on 19.02.2023.
@@ -8,7 +8,7 @@
 import Foundation
 
 /// Адаптер, предоставляющий презентационные данные о списке задач.
-protocol ITaskListSectionsAdapter: AnyObject {
+protocol ITaskListDataAdapter: AnyObject {
 	/// Модель `TaskListModel.PresentationData`.
 	var presentationData: TaskListModel.PresentationData { get }
 
@@ -21,7 +21,7 @@ protocol ITaskListSectionsAdapter: AnyObject {
 	func indexPath(for task: Task) -> IndexPath?
 }
 
-final class TaskListSectionsAdapter: ITaskListSectionsAdapter {
+final class TaskListDataAdapter: ITaskListDataAdapter {
 
 	// Properties
 	private let taskManager: ITaskManager

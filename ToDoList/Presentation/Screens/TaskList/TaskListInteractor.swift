@@ -23,18 +23,18 @@ final class TaskListInteractor: ITaskListInteractor {
 	// Properties
 	private let presenter: ITaskListPresenter
 	private let taskRepository: ITaskRepository
-	private let taskListSectionsAdapter: ITaskListSectionsAdapter
+	private let taskListDataAdapter: ITaskListDataAdapter
 
 	// MARK: - Initialization
 
 	init(
 		presenter: ITaskListPresenter,
 		taskRepository: ITaskRepository,
-		taskListSectionsAdapter: ITaskListSectionsAdapter
+		taskListDataAdapter: ITaskListDataAdapter
 	) {
 		self.presenter = presenter
 		self.taskRepository = taskRepository
-		self.taskListSectionsAdapter = taskListSectionsAdapter
+		self.taskListDataAdapter = taskListDataAdapter
 	}
 	
 	// MARK: - ITaskListPresenter
@@ -45,10 +45,10 @@ final class TaskListInteractor: ITaskListInteractor {
 
 			switch result {
 			case .success(let tasks):
-				self.taskListSectionsAdapter.loadToManager(tasks)
+				self.taskListDataAdapter.loadToManager(tasks)
 
 				let response = TaskListModel.FetchTaskList.Response(
-					presentationData: self.taskListSectionsAdapter.presentationData,
+					presentationData: self.taskListDataAdapter.presentationData,
 					output: self
 				)
 				self.presenter.presentTaskList(response: response)
@@ -65,12 +65,12 @@ final class TaskListInteractor: ITaskListInteractor {
 extension TaskListInteractor: ITaskTableViewCellOutput {
 
 	func didTapCompletedCheckbox(for task: Task) {
-		guard let oldIndexPath = taskListSectionsAdapter.indexPath(for: task) else { return }
+		guard let oldIndexPath = taskListDataAdapter.indexPath(for: task) else { return }
 		task.isCompleted.toggle()
-		guard let newIndexPath = taskListSectionsAdapter.indexPath(for: task) else { return }
+		guard let newIndexPath = taskListDataAdapter.indexPath(for: task) else { return }
 		
 		let response = TaskListModel.UpdateTask.Response(
-			presentationData: taskListSectionsAdapter.presentationData,
+			presentationData: taskListDataAdapter.presentationData,
 			output: self,
 			oldIndexPath: oldIndexPath,
 			newIndexPath: newIndexPath
