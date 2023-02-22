@@ -57,12 +57,12 @@ final class TaskListViewController: UIViewController, ITaskListView {
 	// MARK: - ITaskListView
 
 	func displayTaskList(viewModel: TaskListModel.FetchTaskList.ViewModel) {
-		self.viewData = viewModel.viewData
+		viewData = viewModel.viewData
 		tasksTableView.reloadData()
 	}
 
 	func displayUpdatedTask(viewModel: TaskListModel.UpdateTask.ViewModel) {
-		self.viewData = viewModel.viewData
+		viewData = viewModel.viewData
 		
 		tasksTableView.performBatchUpdates({
 			tasksTableView.moveRow(at: viewModel.oldIndexPath, to: viewModel.newIndexPath)
@@ -109,7 +109,7 @@ extension TaskListViewController: UITableViewDataSource {
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		guard let task = viewData.sections[indexPath.section].tasks[safe: indexPath.row] else { return UITableViewCell() }
+		let task = viewData.sections[indexPath.section].tasks[indexPath.row]
 
 		switch task {
 		case .regularTask(let model):

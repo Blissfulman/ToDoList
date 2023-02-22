@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5E075CFC299D146A005FE58E /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E075CFB299D146A005FE58E /* Array+Extension.swift */; };
 		5E075CFF299D2E9C005FE58E /* ITaskRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E075CFE299D2E9C005FE58E /* ITaskRepository.swift */; };
 		5E075D02299D3352005FE58E /* TaskRepositoryStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E075D01299D3352005FE58E /* TaskRepositoryStub.swift */; };
 		5E0D55D629977A8600F9276E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0D55D529977A8600F9276E /* AppDelegate.swift */; };
@@ -34,7 +33,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5E075CFB299D146A005FE58E /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
 		5E075CFE299D2E9C005FE58E /* ITaskRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ITaskRepository.swift; sourceTree = "<group>"; };
 		5E075D01299D3352005FE58E /* TaskRepositoryStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRepositoryStub.swift; sourceTree = "<group>"; };
 		5E0D55D229977A8500F9276E /* ToDoList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoList.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,22 +71,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		5E075CF9299D144C005FE58E /* Common */ = {
-			isa = PBXGroup;
-			children = (
-				5E075CFA299D1458005FE58E /* Extensions */,
-			);
-			path = Common;
-			sourceTree = "<group>";
-		};
-		5E075CFA299D1458005FE58E /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				5E075CFB299D146A005FE58E /* Array+Extension.swift */,
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
 		5E075CFD299D2E6D005FE58E /* TaskRepositories */ = {
 			isa = PBXGroup;
 			children = (
@@ -117,7 +99,6 @@
 		5E0D55D429977A8600F9276E /* ToDoList */ = {
 			isa = PBXGroup;
 			children = (
-				5E075CF9299D144C005FE58E /* Common */,
 				5E0D55F0299787F700F9276E /* Model */,
 				5E0D55EC29977F8000F9276E /* Core */,
 				5E0D55E929977F0F00F9276E /* Presentation */,
@@ -332,7 +313,6 @@
 				5E0D55F32997881200F9276E /* Task.swift in Sources */,
 				5E0D56042998E49800F9276E /* ConfigurableTableCell.swift in Sources */,
 				5EC7537729A00548002A6775 /* PrioritySortedTaskManagerDecorator.swift in Sources */,
-				5E075CFC299D146A005FE58E /* Array+Extension.swift in Sources */,
 				5E0D55EF299787C700F9276E /* TaskManager.swift in Sources */,
 				5EC7537929A0CABD002A6775 /* TaskListInteractor.swift in Sources */,
 				5E72C13129A3F27600160186 /* TaskListModel.swift in Sources */,
