@@ -10,13 +10,17 @@ import UIKit
 final class TaskListAssembly {
 
 	func assemble() -> UIViewController {
+		let presenter = TaskListPresenter()
+
 		let taskManager = TaskManager()
-		let taskListSectionsAdapter = TaskListSectionsAdapter(
-			taskManager: PrioritySortedTaskManagerDecorator(taskManager: taskManager),
-			taskRepository: TaskRepositoryStub()
+		let taskListSectionsAdapter = TaskListSectionsAdapter(taskManager: PrioritySortedTaskManagerDecorator(taskManager: taskManager))
+		let interactor = TaskListInteractor(
+			presenter: presenter,
+			taskRepository: TaskRepositoryStub(),
+			taskListSectionsAdapter: taskListSectionsAdapter
 		)
-		let presenter = TaskListPresenter(taskListSectionsAdapter: taskListSectionsAdapter)
-		let viewController = TaskListViewController(presenter: presenter)
+
+		let viewController = TaskListViewController(interactor: interactor)
 		presenter.view = viewController
 		return viewController
 	}

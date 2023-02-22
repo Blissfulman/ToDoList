@@ -19,7 +19,7 @@ private enum Constants {
 
 final class ImportantTaskTableViewCell: UITableViewCell, IConfigurableTableCell {
 
-	typealias ConfigurationModel = TaskListModel.ViewModel.ImportantTask
+	typealias ConfigurationModel = TaskListModel.ViewData.ImportantTask
 
 	// UI
 	private lazy var checkboxImageView: UIImageView = {
@@ -123,6 +123,6 @@ final class ImportantTaskTableViewCell: UITableViewCell, IConfigurableTableCell 
 
 	@objc private func didTapCheckbox() {
 		guard let model = model else { return }
-		model.output.taskCompletionStateDidChange(for: model)
+		model.output.didTapCompletedCheckbox(for: model.rawTask)
 	}
 }

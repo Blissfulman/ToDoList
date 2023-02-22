@@ -8,12 +8,10 @@
 import UIKit
 
 protocol ITaskListView: AnyObject {
-	/// Отображение данных на основе переданной модели.
-	/// - Parameter viewModel: Модель данных вью.
-	func renderData(viewModel: TaskListModel.ViewModel)
-	/// Обновление задачи.
-	/// - Parameter updateTaskModel: Модель для обновления задачи.
-	func updateTask(updateTaskModel: TaskListModel.UpdateTaskModel)
+	/// Отображает список задач.
+	func displayTaskList(viewModel: TaskListModel.FetchTaskList.ViewModel)
+	/// Отображает обновлённую задачу. Для корректроного выполнения обновления также передаются и сохраняются обновлённые данные таблицы.
+	func displayUpdatedTask(viewModel: TaskListModel.UpdateTask.ViewModel)
 }
 
 private enum Constants {
@@ -32,13 +30,13 @@ final class TaskListViewController: UIViewController, ITaskListView {
 	}()
 
 	// Properties
-	private var viewModel: TaskListModel.ViewModel = TaskListModel.ViewModel(sections: [])
-	private let presenter: ITaskListPresenter
+	private let interactor: ITaskListInteractor
+	private var viewData = TaskListModel.ViewData(sections: [])
 	
 	// MARK: - Initialization
 
-	init(presenter: ITaskListPresenter) {
-		self.presenter = presenter
+	init(interactor: ITaskListInteractor) {
+		self.interactor = interactor
 		super.init(nibName: nil, bundle: nil)
 	}
 
@@ -53,23 +51,23 @@ final class TaskListViewController: UIViewController, ITaskListView {
 		setupUI()
 		setupLayout()
 		configureUI()
-		presenter.viewDidLoad()
+		interactor.requestTaskList(request: TaskListModel.FetchTaskList.Request())
 	}
 
 	// MARK: - ITaskListView
 
-	func renderData(viewModel: TaskListModel.ViewModel) {
-		self.viewModel = viewModel
+	func displayTaskList(viewModel: TaskListModel.FetchTaskList.ViewModel) {
+		self.viewData = viewModel.viewData
 		tasksTableView.reloadData()
 	}
 
-	func updateTask(updateTaskModel: TaskListModel.UpdateTaskModel) {
-		self.viewModel = updateTaskModel.viewModel
+	func displayUpdatedTask(viewModel: TaskListModel.UpdateTask.ViewModel) {
+		self.viewData = viewModel.viewData
 		
 		tasksTableView.performBatchUpdates({
-			tasksTableView.moveRow(at: updateTaskModel.oldIndexPath, to: updateTaskModel.newIndexPath)
+			tasksTableView.moveRow(at: viewModel.oldIndexPath, to: viewModel.newIndexPath)
 		}, completion: { [weak self] _ in
-			self?.tasksTableView.reloadRows(at: [updateTaskModel.newIndexPath], with: .automatic)
+			self?.tasksTableView.reloadRows(at: [viewModel.newIndexPath], with: .automatic)
 		})
 	}
 
@@ -99,19 +97,19 @@ final class TaskListViewController: UIViewController, ITaskListView {
 extension TaskListViewController: UITableViewDataSource {
 
 	func numberOfSections(in tableView: UITableView) -> Int {
-		viewModel.sections.count
+		viewData.sections.count
 	}
 
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		viewModel.sections[section].title
+		viewData.sections[section].title
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		viewModel.sections[section].tasks.count
+		viewData.sections[section].tasks.count
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		guard let task = viewModel.sections[indexPath.section].tasks[safe: indexPath.row] else { return UITableViewCell() }
+		guard let task = viewData.sections[indexPath.section].tasks[safe: indexPath.row] else { return UITableViewCell() }
 
 		switch task {
 		case .regularTask(let model):
