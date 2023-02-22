@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5E075CFC299D146A005FE58E /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E075CFB299D146A005FE58E /* Array+Extension.swift */; };
 		5E075CFF299D2E9C005FE58E /* ITaskRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E075CFE299D2E9C005FE58E /* ITaskRepository.swift */; };
 		5E075D02299D3352005FE58E /* TaskRepositoryStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E075D01299D3352005FE58E /* TaskRepositoryStub.swift */; };
 		5E0D55D629977A8600F9276E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0D55D529977A8600F9276E /* AppDelegate.swift */; };
@@ -25,15 +24,22 @@
 		5E0D560A29990CAB00F9276E /* TaskListAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0D560929990CAB00F9276E /* TaskListAssembly.swift */; };
 		5E0D560E299913BE00F9276E /* ImportantTaskTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0D560D299913BD00F9276E /* ImportantTaskTableViewCell.swift */; };
 		5E0D5613299940DF00F9276E /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0D5612299940DF00F9276E /* UIView+Extension.swift */; };
+		5E4012A129A53636008E7E74 /* TaskListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4012A029A53636008E7E74 /* TaskListPresenter.swift */; };
+		5E4012A429A67711008E7E74 /* AuthorizationAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4012A329A67711008E7E74 /* AuthorizationAssembly.swift */; };
+		5E4012A629A67724008E7E74 /* AuthorizationInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4012A529A67724008E7E74 /* AuthorizationInteractor.swift */; };
+		5E4012A829A6772C008E7E74 /* AuthorizationPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4012A729A6772C008E7E74 /* AuthorizationPresenter.swift */; };
+		5E4012AA29A67738008E7E74 /* AuthorizationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4012A929A67738008E7E74 /* AuthorizationViewController.swift */; };
+		5E4012AC29A6775D008E7E74 /* AuthorizationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4012AB29A6775D008E7E74 /* AuthorizationModel.swift */; };
+		5E4012AE29A67A3F008E7E74 /* AuthorizationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4012AD29A67A3F008E7E74 /* AuthorizationRouter.swift */; };
+		5E4012B029A68E5D008E7E74 /* CredentialsVerifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4012AF29A68E5D008E7E74 /* CredentialsVerifier.swift */; };
 		5E72C13129A3F27600160186 /* TaskListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E72C13029A3F27600160186 /* TaskListModel.swift */; };
 		5EC7537729A00548002A6775 /* PrioritySortedTaskManagerDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EC7537629A00548002A6775 /* PrioritySortedTaskManagerDecorator.swift */; };
-		5EC7537929A0CABD002A6775 /* TaskListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EC7537829A0CABD002A6775 /* TaskListPresenter.swift */; };
-		5EC7537B29A1DE4E002A6775 /* TaskListSectionsAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EC7537A29A1DE4E002A6775 /* TaskListSectionsAdapter.swift */; };
+		5EC7537929A0CABD002A6775 /* TaskListInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EC7537829A0CABD002A6775 /* TaskListInteractor.swift */; };
+		5EC7537B29A1DE4E002A6775 /* TaskListDataAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EC7537A29A1DE4E002A6775 /* TaskListDataAdapter.swift */; };
 		5EC7537E29A205C1002A6775 /* ITaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EC7537D29A205C1002A6775 /* ITaskManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5E075CFB299D146A005FE58E /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
 		5E075CFE299D2E9C005FE58E /* ITaskRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ITaskRepository.swift; sourceTree = "<group>"; };
 		5E075D01299D3352005FE58E /* TaskRepositoryStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRepositoryStub.swift; sourceTree = "<group>"; };
 		5E0D55D229977A8500F9276E /* ToDoList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoList.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -53,10 +59,18 @@
 		5E0D560929990CAB00F9276E /* TaskListAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListAssembly.swift; sourceTree = "<group>"; };
 		5E0D560D299913BD00F9276E /* ImportantTaskTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportantTaskTableViewCell.swift; sourceTree = "<group>"; };
 		5E0D5612299940DF00F9276E /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
+		5E4012A029A53636008E7E74 /* TaskListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListPresenter.swift; sourceTree = "<group>"; };
+		5E4012A329A67711008E7E74 /* AuthorizationAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationAssembly.swift; sourceTree = "<group>"; };
+		5E4012A529A67724008E7E74 /* AuthorizationInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationInteractor.swift; sourceTree = "<group>"; };
+		5E4012A729A6772C008E7E74 /* AuthorizationPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationPresenter.swift; sourceTree = "<group>"; };
+		5E4012A929A67738008E7E74 /* AuthorizationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationViewController.swift; sourceTree = "<group>"; };
+		5E4012AB29A6775D008E7E74 /* AuthorizationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationModel.swift; sourceTree = "<group>"; };
+		5E4012AD29A67A3F008E7E74 /* AuthorizationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationRouter.swift; sourceTree = "<group>"; };
+		5E4012AF29A68E5D008E7E74 /* CredentialsVerifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CredentialsVerifier.swift; sourceTree = "<group>"; };
 		5E72C13029A3F27600160186 /* TaskListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListModel.swift; sourceTree = "<group>"; };
 		5EC7537629A00548002A6775 /* PrioritySortedTaskManagerDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrioritySortedTaskManagerDecorator.swift; sourceTree = "<group>"; };
-		5EC7537829A0CABD002A6775 /* TaskListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListPresenter.swift; sourceTree = "<group>"; };
-		5EC7537A29A1DE4E002A6775 /* TaskListSectionsAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListSectionsAdapter.swift; sourceTree = "<group>"; };
+		5EC7537829A0CABD002A6775 /* TaskListInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListInteractor.swift; sourceTree = "<group>"; };
+		5EC7537A29A1DE4E002A6775 /* TaskListDataAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListDataAdapter.swift; sourceTree = "<group>"; };
 		5EC7537D29A205C1002A6775 /* ITaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ITaskManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -71,22 +85,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		5E075CF9299D144C005FE58E /* Common */ = {
-			isa = PBXGroup;
-			children = (
-				5E075CFA299D1458005FE58E /* Extensions */,
-			);
-			path = Common;
-			sourceTree = "<group>";
-		};
-		5E075CFA299D1458005FE58E /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				5E075CFB299D146A005FE58E /* Array+Extension.swift */,
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
 		5E075CFD299D2E6D005FE58E /* TaskRepositories */ = {
 			isa = PBXGroup;
 			children = (
@@ -115,7 +113,6 @@
 		5E0D55D429977A8600F9276E /* ToDoList */ = {
 			isa = PBXGroup;
 			children = (
-				5E075CF9299D144C005FE58E /* Common */,
 				5E0D55F0299787F700F9276E /* Model */,
 				5E0D55EC29977F8000F9276E /* Core */,
 				5E0D55E929977F0F00F9276E /* Presentation */,
@@ -195,8 +192,9 @@
 			children = (
 				5E0D560929990CAB00F9276E /* TaskListAssembly.swift */,
 				5E72C13029A3F27600160186 /* TaskListModel.swift */,
-				5EC7537A29A1DE4E002A6775 /* TaskListSectionsAdapter.swift */,
-				5EC7537829A0CABD002A6775 /* TaskListPresenter.swift */,
+				5EC7537A29A1DE4E002A6775 /* TaskListDataAdapter.swift */,
+				5EC7537829A0CABD002A6775 /* TaskListInteractor.swift */,
+				5E4012A029A53636008E7E74 /* TaskListPresenter.swift */,
 				5E0D55D929977A8600F9276E /* TaskListViewController.swift */,
 				5E0D55FC2998DD6300F9276E /* Cells */,
 			);
@@ -241,9 +239,24 @@
 		5E0D56082998ED0400F9276E /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				5E4012A229A676DE008E7E74 /* Authorization */,
 				5E0D55FB2998DD5700F9276E /* TaskList */,
 			);
 			path = Screens;
+			sourceTree = "<group>";
+		};
+		5E4012A229A676DE008E7E74 /* Authorization */ = {
+			isa = PBXGroup;
+			children = (
+				5E4012A329A67711008E7E74 /* AuthorizationAssembly.swift */,
+				5E4012AB29A6775D008E7E74 /* AuthorizationModel.swift */,
+				5E4012AD29A67A3F008E7E74 /* AuthorizationRouter.swift */,
+				5E4012AF29A68E5D008E7E74 /* CredentialsVerifier.swift */,
+				5E4012A529A67724008E7E74 /* AuthorizationInteractor.swift */,
+				5E4012A729A6772C008E7E74 /* AuthorizationPresenter.swift */,
+				5E4012A929A67738008E7E74 /* AuthorizationViewController.swift */,
+			);
+			path = Authorization;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -316,26 +329,33 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5E4012A829A6772C008E7E74 /* AuthorizationPresenter.swift in Sources */,
 				5E0D55DA29977A8600F9276E /* TaskListViewController.swift in Sources */,
+				5E4012A129A53636008E7E74 /* TaskListPresenter.swift in Sources */,
 				5E0D55F72998219700F9276E /* ImportantTask.swift in Sources */,
-				5EC7537B29A1DE4E002A6775 /* TaskListSectionsAdapter.swift in Sources */,
+				5EC7537B29A1DE4E002A6775 /* TaskListDataAdapter.swift in Sources */,
 				5E0D55FE2998DD9D00F9276E /* RegularTaskTableViewCell.swift in Sources */,
 				5E0D5613299940DF00F9276E /* UIView+Extension.swift in Sources */,
 				5E075CFF299D2E9C005FE58E /* ITaskRepository.swift in Sources */,
 				5E0D55F52998213A00F9276E /* RegularTask.swift in Sources */,
 				5E0D55D629977A8600F9276E /* AppDelegate.swift in Sources */,
+				5E4012A629A67724008E7E74 /* AuthorizationInteractor.swift in Sources */,
 				5EC7537E29A205C1002A6775 /* ITaskManager.swift in Sources */,
 				5E0D55F32997881200F9276E /* Task.swift in Sources */,
 				5E0D56042998E49800F9276E /* ConfigurableTableCell.swift in Sources */,
 				5EC7537729A00548002A6775 /* PrioritySortedTaskManagerDecorator.swift in Sources */,
-				5E075CFC299D146A005FE58E /* Array+Extension.swift in Sources */,
+				5E4012AC29A6775D008E7E74 /* AuthorizationModel.swift in Sources */,
 				5E0D55EF299787C700F9276E /* TaskManager.swift in Sources */,
-				5EC7537929A0CABD002A6775 /* TaskListPresenter.swift in Sources */,
+				5EC7537929A0CABD002A6775 /* TaskListInteractor.swift in Sources */,
+				5E4012A429A67711008E7E74 /* AuthorizationAssembly.swift in Sources */,
+				5E4012AA29A67738008E7E74 /* AuthorizationViewController.swift in Sources */,
 				5E72C13129A3F27600160186 /* TaskListModel.swift in Sources */,
 				5E0D560A29990CAB00F9276E /* TaskListAssembly.swift in Sources */,
 				5E075D02299D3352005FE58E /* TaskRepositoryStub.swift in Sources */,
+				5E4012AE29A67A3F008E7E74 /* AuthorizationRouter.swift in Sources */,
 				5E0D560E299913BE00F9276E /* ImportantTaskTableViewCell.swift in Sources */,
 				5E0D55D829977A8600F9276E /* SceneDelegate.swift in Sources */,
+				5E4012B029A68E5D008E7E74 /* CredentialsVerifier.swift in Sources */,
 				5E0D56072998EC9200F9276E /* UITableView+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
