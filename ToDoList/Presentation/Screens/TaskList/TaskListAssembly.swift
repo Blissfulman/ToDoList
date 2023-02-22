@@ -21,6 +21,7 @@ final class TaskListAssembly {
 		)
 
 		let viewController = TaskListViewController(interactor: interactor)
+		
 		presenter.view = viewController
 		return viewController
 	}

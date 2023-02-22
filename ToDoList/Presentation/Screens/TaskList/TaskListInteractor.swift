@@ -37,7 +37,7 @@ final class TaskListInteractor: ITaskListInteractor {
 		self.taskListDataAdapter = taskListDataAdapter
 	}
 	
-	// MARK: - ITaskListPresenter
+	// MARK: - ITaskListInteractor
 	
 	func requestTaskList(request: TaskListModel.FetchTaskList.Request) {
 		taskRepository.getTaskList { [weak self] result in
