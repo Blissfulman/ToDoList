@@ -9,12 +9,52 @@ import Foundation
 
 enum TaskListModel {
 
-	struct ViewModel {
+	enum FetchTaskList {
+		struct Request {}
+		struct Response {
+			let presentationData: PresentationData
+			let output: ITaskTableViewCellOutput
+		}
+		struct ViewModel {
+			let viewData: ViewData
+		}
+	}
+
+	enum UpdateTask {
+		struct Response {
+			let presentationData: PresentationData
+			let output: ITaskTableViewCellOutput
+			let oldIndexPath: IndexPath
+			let newIndexPath: IndexPath
+		}
+		struct ViewModel {
+			let viewData: ViewData
+			let oldIndexPath: IndexPath
+			let newIndexPath: IndexPath
+		}
+	}
+}
+
+// MARK: - Nested models
+
+extension TaskListModel {
+
+	struct PresentationData {
+
+		enum Section {
+			case uncompleted(tasks: [Task])
+			case completed(tasks: [Task])
+		}
+
+		let sections: [Section]
+	}
+
+	struct ViewData {
 
 		struct RegularTask {
 			let title: String
 			let checkboxImageName: String
-			let output: ITaskTableViewCellOutput
+			let didTapCompletedCheckboxAction: () -> Void
 		}
 
 		struct ImportantTask {
@@ -23,7 +63,7 @@ enum TaskListModel {
 			let isExpired: Bool
 			let priorityText: String
 			let executionDate: String
-			let output: ITaskTableViewCellOutput
+			let didTapCompletedCheckboxAction: () -> Void
 		}
 
 		enum Task {
@@ -36,52 +76,6 @@ enum TaskListModel {
 			let tasks: [Task]
 		}
 
-		// Properties
 		let sections: [Section]
-	}
-
-	struct UpdateTaskModel {
-		let oldIndexPath: IndexPath
-		let newIndexPath: IndexPath
-		let viewModel: ViewModel
-	}
-}
-
-extension TaskListModel.ViewModel.RegularTask: Hashable {
-
-	static func == (lhs: Self, rhs: Self) -> Bool {
-		lhs.hashValue == rhs.hashValue
-	}
-
-	func hash(into hasher: inout Hasher) {
-		hasher.combine(title)
-		hasher.combine(checkboxImageName)
-	}
-}
-
-extension TaskListModel.ViewModel.ImportantTask: Hashable {
-
-	static func == (lhs: Self, rhs: Self) -> Bool {
-		lhs.hashValue == rhs.hashValue
-	}
-
-	func hash(into hasher: inout Hasher) {
-		hasher.combine(title)
-		hasher.combine(checkboxImageName)
-		hasher.combine(isExpired)
-		hasher.combine(priorityText)
-		hasher.combine(executionDate)
-	}
-}
-
-extension TaskListModel.ViewModel.Task {
-
-	var hashValue: Int {
-		switch self {
-		case .regularTask(let task):
-			return task.hashValue
-		case .importantTask(let task):
-			return task.hashValue
-		}
 	}
 }
