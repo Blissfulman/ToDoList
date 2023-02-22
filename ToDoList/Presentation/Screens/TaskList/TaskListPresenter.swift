@@ -15,7 +15,7 @@ protocol ITaskListPresenter: AnyObject {
 }
 
 private extension ImportantTask.Priority {
-
+	
 	var description: String {
 		switch self {
 		case .low:
@@ -37,18 +37,18 @@ private enum Constants {
 }
 
 final class TaskListPresenter: ITaskListPresenter {
-
+	
 	// Properties
 	weak var view: ITaskListView?
-
+	
 	// MARK: - ITaskListPresenter
-
+	
 	func presentTaskList(response: TaskListModel.FetchTaskList.Response) {
 		let viewData = convertToViewData(response.presentationData, output: response.output)
 		let viewModel = TaskListModel.FetchTaskList.ViewModel(viewData: viewData)
 		view?.displayTaskList(viewModel: viewModel)
 	}
-
+	
 	func presentUpdatedTask(response: TaskListModel.UpdateTask.Response) {
 		let viewData = convertToViewData(response.presentationData, output: response.output)
 		let viewModel = TaskListModel.UpdateTask.ViewModel(
@@ -58,9 +58,9 @@ final class TaskListPresenter: ITaskListPresenter {
 		)
 		view?.displayUpdatedTask(viewModel: viewModel)
 	}
-
+	
 	// MARK: - Private methods
-
+	
 	private func convertToViewData(_ presentationData: TaskListModel.PresentationData, output: ITaskTableViewCellOutput) -> TaskListModel.ViewData {
 		let viewDataSections: [TaskListModel.ViewData.Section] = presentationData.sections.map {
 			switch $0 {
@@ -78,7 +78,7 @@ final class TaskListPresenter: ITaskListPresenter {
 		}
 		return TaskListModel.ViewData(sections: viewDataSections)
 	}
-
+	
 	private func mapTask(_ task: Task, output: ITaskTableViewCellOutput) -> TaskListModel.ViewData.Task {
 		switch task {
 		case let importantTask as ImportantTask:
@@ -88,16 +88,18 @@ final class TaskListPresenter: ITaskListPresenter {
 				isExpired: importantTask.isExpired,
 				priorityText: Constants.priorityLabelText + importantTask.priority.description,
 				executionDate: importantTask.executionDate?.formatted(date: .numeric, time: .omitted) ?? "No executionDate",
-				rawTask: task,
-				output: output
+				didTapCompletedCheckboxAction: { [weak output] in
+					output?.didTapCompletedCheckbox(for: task)
+				}
 			)
 			return .importantTask(task)
 		case let task:
 			let task = TaskListModel.ViewData.RegularTask(
 				title: task.title,
 				checkboxImageName: task.isCompleted ? Constants.completedCheckboxImageName : Constants.uncompletedCheckboxImageName,
-				rawTask: task,
-				output: output
+				didTapCompletedCheckboxAction: { [weak output] in
+					output?.didTapCompletedCheckbox(for: task)
+				}
 			)
 			return .regularTask(task)
 		}

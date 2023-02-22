@@ -14,8 +14,8 @@ protocol ITaskListInteractor: AnyObject {
 
 protocol ITaskTableViewCellOutput: AnyObject {
 	/// Уведомляет о изменении состояния выполненности задачи.
-	/// - Parameter task: Модель задачи, у которой произошло изменение состояния выполненности.
-	func didTapCompletedCheckbox(for task: TaskListModel.RawTask)
+	/// - Parameter task: Задача, у которой произошло изменение состояния выполненности.
+	func didTapCompletedCheckbox(for task: Task)
 }
 
 final class TaskListInteractor: ITaskListInteractor {
@@ -27,9 +27,10 @@ final class TaskListInteractor: ITaskListInteractor {
 
 	// MARK: - Initialization
 
-	init(presenter: ITaskListPresenter,
-		 taskRepository: ITaskRepository,
-		 taskListSectionsAdapter: ITaskListSectionsAdapter
+	init(
+		presenter: ITaskListPresenter,
+		taskRepository: ITaskRepository,
+		taskListSectionsAdapter: ITaskListSectionsAdapter
 	) {
 		self.presenter = presenter
 		self.taskRepository = taskRepository
@@ -63,7 +64,7 @@ final class TaskListInteractor: ITaskListInteractor {
 
 extension TaskListInteractor: ITaskTableViewCellOutput {
 
-	func didTapCompletedCheckbox(for task: TaskListModel.RawTask) {
+	func didTapCompletedCheckbox(for task: Task) {
 		guard let oldIndexPath = taskListSectionsAdapter.indexPath(for: task) else { return }
 		task.isCompleted.toggle()
 		guard let newIndexPath = taskListSectionsAdapter.indexPath(for: task) else { return }

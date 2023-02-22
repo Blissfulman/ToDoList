@@ -39,13 +39,11 @@ enum TaskListModel {
 
 extension TaskListModel {
 
-	typealias RawTask = Task
-
 	struct PresentationData {
 
 		enum Section {
-			case uncompleted(tasks: [RawTask])
-			case completed(tasks: [RawTask])
+			case uncompleted(tasks: [Task])
+			case completed(tasks: [Task])
 		}
 
 		let sections: [Section]
@@ -56,8 +54,7 @@ extension TaskListModel {
 		struct RegularTask {
 			let title: String
 			let checkboxImageName: String
-			let rawTask: RawTask
-			let output: ITaskTableViewCellOutput
+			let didTapCompletedCheckboxAction: () -> Void
 		}
 
 		struct ImportantTask {
@@ -66,8 +63,7 @@ extension TaskListModel {
 			let isExpired: Bool
 			let priorityText: String
 			let executionDate: String
-			let rawTask: RawTask
-			let output: ITaskTableViewCellOutput
+			let didTapCompletedCheckboxAction: () -> Void
 		}
 
 		enum Task {

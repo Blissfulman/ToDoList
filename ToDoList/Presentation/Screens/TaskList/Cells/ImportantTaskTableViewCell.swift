@@ -44,7 +44,7 @@ final class ImportantTaskTableViewCell: UITableViewCell, IConfigurableTableCell 
 	}()
 
 	// Properties
-	private var model: ConfigurationModel?
+	private var didTapCompletedCheckboxAction: (() -> Void)?
 
 	// MARK: - Initialization
 
@@ -65,7 +65,6 @@ final class ImportantTaskTableViewCell: UITableViewCell, IConfigurableTableCell 
 		super.prepareForReuse()
 		checkboxImageView.image = nil
 		titleLabel.text = nil
-		executionDateLabel.text = nil
 		priorityLabel.text = nil
 		executionDateLabel.text = nil
 	}
@@ -73,12 +72,13 @@ final class ImportantTaskTableViewCell: UITableViewCell, IConfigurableTableCell 
 	// MARK: - IConfigurableTableCell
 
 	func configure(with model: ConfigurationModel) {
-		self.model = model
+		didTapCompletedCheckboxAction = model.didTapCompletedCheckboxAction
+
 		titleLabel.text = model.title
 		checkboxImageView.image = UIImage(systemName: model.checkboxImageName)
-		contentView.backgroundColor = model.isExpired ? Constants.expiredTaskBackgroundColor : Constants.unexpiredTaskBackgroundColor
 		priorityLabel.text = model.priorityText
 		executionDateLabel.text = model.executionDate
+		contentView.backgroundColor = model.isExpired ? Constants.expiredTaskBackgroundColor : Constants.unexpiredTaskBackgroundColor
 	}
 
 	// MARK: - Private methods
@@ -122,7 +122,6 @@ final class ImportantTaskTableViewCell: UITableViewCell, IConfigurableTableCell 
 	}
 
 	@objc private func didTapCheckbox() {
-		guard let model = model else { return }
-		model.output.didTapCompletedCheckbox(for: model.rawTask)
+		didTapCompletedCheckboxAction?()
 	}
 }

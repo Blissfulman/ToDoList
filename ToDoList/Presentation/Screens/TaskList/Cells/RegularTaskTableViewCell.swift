@@ -32,7 +32,7 @@ final class RegularTaskTableViewCell: UITableViewCell, IConfigurableTableCell {
 	}()
 
 	// Properties
-	private var model: ConfigurationModel?
+	private var didTapCompletedCheckboxAction: (() -> Void)?
 
 	// MARK: - Initialization
 
@@ -58,7 +58,8 @@ final class RegularTaskTableViewCell: UITableViewCell, IConfigurableTableCell {
 	// MARK: - IConfigurableTableCell
 
 	func configure(with model: ConfigurationModel) {
-		self.model = model
+		didTapCompletedCheckboxAction = model.didTapCompletedCheckboxAction
+		
 		titleLabel.text = model.title
 		checkboxImageView.image = UIImage(systemName: model.checkboxImageName)
 	}
@@ -94,7 +95,6 @@ final class RegularTaskTableViewCell: UITableViewCell, IConfigurableTableCell {
 	}
 
 	@objc private func didTapCheckbox() {
-		guard let model = model else { return }
-		model.output.didTapCompletedCheckbox(for: model.rawTask)
+		didTapCompletedCheckboxAction?()
 	}
 }
