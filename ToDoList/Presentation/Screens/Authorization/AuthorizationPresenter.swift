@@ -9,16 +9,16 @@ import Foundation
 
 /// Презентер экрана авторизации.
 protocol IAuthorizationPresenter: AnyObject {
-	/// Преподносит вью успешную авторизацию.
+	/// Преподносит вью результат авторизации.
 	func presentLogin(response: AuthorizationModel.Login.Response)
-	/// Преподносит вью ошибку авторизации.
-	func presentCredentialsError(response: AuthorizationModel.CredentialsError.Response)
 }
 
 private enum Constants {
-	static let credentialsErrorTitle = "Credentials error"
-	static let credentialsErrorMessage = "The entered credentials are invalid.\nPlease enter valid data."
-	static let credentialsErrorActionTitle = "Ok"
+	static let missingСredentialsTitle = "Credentials are missing"
+	static let missingСredentialsMessage = "Please enter your login and password."
+	static let invalidСredentialsTitle = "Credentials are invalid"
+	static let invalidСredentialsMessage = "The entered credentials are invalid.\nPlease enter valid data."
+	static let actionTitle = "Ok"
 }
 
 /// Презентер экрана авторизации.
@@ -30,17 +30,27 @@ final class AuthorizationPresenter: IAuthorizationPresenter {
 	// MARK: - IAuthorizationPresenter
 
 	func presentLogin(response: AuthorizationModel.Login.Response) {
-		let viewModel = AuthorizationModel.Login.ViewModel(route: .taskList)
-		view?.displayLogin(viewModel: viewModel)
-	}
+		let viewModel: AuthorizationModel.ViewModel
 
-	func presentCredentialsError(response: AuthorizationModel.CredentialsError.Response) {
-		let credentialsErrorModel = AuthorizationModel.Route.CredentialsErrorModel(
-			title: Constants.credentialsErrorTitle,
-			message: Constants.credentialsErrorMessage,
-			actionTitle: Constants.credentialsErrorActionTitle
-		)
-		let viewModel = AuthorizationModel.CredentialsError.ViewModel(route: .credentialsError(model: credentialsErrorModel))
-		view?.displayCredentialsError(viewModel: viewModel)
+		switch response.requestResult {
+		case .successLogin:
+			viewModel = AuthorizationModel.ViewModel(responseResult: .successLogin)
+		case .missingСredentials:
+			let alertModel = AuthorizationModel.AlertModel(
+				title: Constants.missingСredentialsTitle,
+				message: Constants.missingСredentialsMessage,
+				actionTitle: Constants.actionTitle
+			)
+			viewModel = AuthorizationModel.ViewModel(responseResult: .missingСredentials(model: alertModel))
+		case .invalidСredentials:
+			let alertModel = AuthorizationModel.AlertModel(
+				title: Constants.invalidСredentialsTitle,
+				message: Constants.invalidСredentialsMessage,
+				actionTitle: Constants.actionTitle
+			)
+			viewModel = AuthorizationModel.ViewModel(responseResult: .invalidСredentials(model: alertModel))
+		}
+
+		view?.render(viewModel: viewModel)
 	}
 }

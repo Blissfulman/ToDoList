@@ -30,12 +30,18 @@ final class AuthorizationInteractor: IAuthorizationInteractor {
 	// MARK: - AuthorizationInteractor
 
 	func requestLogin(request: AuthorizationModel.Login.Request) {
-		if credentialsVerifier.isValid(credentials: request.credentials) {
-			let response = AuthorizationModel.Login.Response()
+		guard let login = request.credentials.login,
+			  let password = request.credentials.password,
+			  !login.isEmpty,
+			  !password.isEmpty
+		else {
+			let response = AuthorizationModel.Login.Response(requestResult: .missingСredentials)
 			presenter.presentLogin(response: response)
-		} else {
-			let response = AuthorizationModel.CredentialsError.Response()
-			presenter.presentCredentialsError(response: response)
+			return
 		}
+		
+		let isValidCredentials = credentialsVerifier.isValid(credentials: AuthorizationModel.Credentials(login: login, password: password))
+		let response = AuthorizationModel.Login.Response(requestResult: isValidCredentials ? .successLogin : .invalidСredentials)
+		presenter.presentLogin(response: response)
 	}
 }

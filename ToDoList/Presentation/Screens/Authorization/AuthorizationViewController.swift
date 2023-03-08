@@ -9,10 +9,8 @@ import UIKit
 
 /// Вью экрана авторизации.
 protocol IAuthorizationView: AnyObject {
-	/// Отображает успешную авторизацию.
-	func displayLogin(viewModel: AuthorizationModel.Login.ViewModel)
-	/// Отображает ошибку авторизации.
-	func displayCredentialsError(viewModel: AuthorizationModel.CredentialsError.ViewModel)
+	/// Обрабатывает переданную вью модель.
+	func render(viewModel: AuthorizationModel.ViewModel)
 }
 
 private enum Constants {
@@ -92,12 +90,13 @@ final class AuthorizationViewController: UIViewController, IAuthorizationView {
 
 	// MARK: - IAuthorizationView
 
-	func displayLogin(viewModel: AuthorizationModel.Login.ViewModel) {
-		router.navigateTo(route: viewModel.route)
-	}
-
-	func displayCredentialsError(viewModel: AuthorizationModel.CredentialsError.ViewModel) {
-		router.navigateTo(route: viewModel.route)
+	func render(viewModel: AuthorizationModel.ViewModel) {
+		switch viewModel.responseResult {
+		case .successLogin:
+			router.navigateToTaskList()
+		case .missingСredentials(let model), .invalidСredentials(let model):
+			router.navigateToAlert(model: model)
+		}
 	}
 
 	// MARK: - Private methods
@@ -119,7 +118,7 @@ final class AuthorizationViewController: UIViewController, IAuthorizationView {
 	}
 
 	@objc private func didTapSignInButton() {
-		let credentials = AuthorizationModel.Credentials(
+		let credentials = AuthorizationModel.Login.Request.EnteredCredentials(
 			login: loginTextField.text,
 			password: passwordTextField.text
 		)

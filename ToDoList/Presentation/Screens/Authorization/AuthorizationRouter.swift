@@ -9,9 +9,11 @@ import UIKit
 
 /// Роутер экрана авторизации.
 protocol IAuthorizationRouter: AnyObject {
-	/// Переходит по указанному направлению.
-	/// - Parameter route: Направление перехода.
-	func navigateTo(route: AuthorizationModel.Route)
+	/// Переходит к списку задач.
+	func navigateToTaskList()
+	/// Переходит к отображению всплывающего сообщения.
+	/// - Parameter model: Модель данных всплывающего сообщения.
+	func navigateToAlert(model: AuthorizationModel.AlertModel)
 }
 
 /// Роутер экрана авторизации.
@@ -22,24 +24,13 @@ final class AuthorizationRouter: IAuthorizationRouter {
 
 	// MARK: - IAuthorizationRouter
 
-	func navigateTo(route: AuthorizationModel.Route) {
-		switch route {
-		case .taskList:
-			navigateToTaskList()
-		case .credentialsError(let model):
-			navigateCredentialsError(model: model)
-		}
-	}
-
-	// MARK: - Private methods
-
-	private func navigateToTaskList() {
+	func navigateToTaskList() {
 		let taskListViewController = TaskListAssembly().assemble()
 		taskListViewController.navigationItem.hidesBackButton = true
 		viewController?.show(taskListViewController, sender: self)
 	}
 
-	private func navigateCredentialsError(model: AuthorizationModel.Route.CredentialsErrorModel) {
+	func navigateToAlert(model: AuthorizationModel.AlertModel) {
 		let credentialsErrorAlertController = UIAlertController(
 			title: model.title,
 			message: model.message,
