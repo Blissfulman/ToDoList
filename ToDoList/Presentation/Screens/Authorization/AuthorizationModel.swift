@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Модель экрана авторизации.
 enum AuthorizationModel {
 
 	enum Login {

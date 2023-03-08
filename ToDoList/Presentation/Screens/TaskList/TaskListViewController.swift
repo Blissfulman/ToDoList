@@ -7,6 +7,7 @@
 
 import UIKit
 
+/// Вью экрана списка задач.
 protocol ITaskListView: AnyObject {
 	/// Отображает список задач.
 	func displayTaskList(viewModel: TaskListModel.FetchTaskList.ViewModel)
@@ -18,6 +19,7 @@ private enum Constants {
 	static let title = "To Do List"
 }
 
+/// Вью экрана списка задач.
 final class TaskListViewController: UIViewController, ITaskListView {
 
 	// UI

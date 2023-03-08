@@ -21,6 +21,7 @@ protocol ITaskListDataAdapter: AnyObject {
 	func indexPath(for task: Task) -> IndexPath?
 }
 
+/// Адаптер, предоставляющий презентационные данные о списке задач.
 final class TaskListDataAdapter: ITaskListDataAdapter {
 
 	// Properties

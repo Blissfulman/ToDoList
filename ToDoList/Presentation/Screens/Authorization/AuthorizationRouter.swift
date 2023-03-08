@@ -7,12 +7,14 @@
 
 import UIKit
 
-protocol IAuthorizationRouter {
+/// Роутер экрана авторизации.
+protocol IAuthorizationRouter: AnyObject {
 	/// Переходит по указанному направлению.
 	/// - Parameter route: Направление перехода.
 	func navigateTo(route: AuthorizationModel.Route)
 }
 
+/// Роутер экрана авторизации.
 final class AuthorizationRouter: IAuthorizationRouter {
 
 	// Properties

@@ -7,17 +7,20 @@
 
 import Foundation
 
+/// Интерактор экрана списка задач.
 protocol ITaskListInteractor: AnyObject {
 	/// Запрашивает список задач.
 	func requestTaskList(request: TaskListModel.FetchTaskList.Request)
 }
 
-protocol ITaskTableViewCellOutput: AnyObject {
-	/// Уведомляет о изменении состояния выполненности задачи.
-	/// - Parameter task: Задача, у которой произошло изменение состояния выполненности.
-	func didTapCompletedCheckbox(for task: Task)
+/// Протокол для делегирования интерактору обработки событий списка задач.
+protocol ITaskListInteractorOutput: AnyObject {
+	/// Уведомляет о необходимости изменения состояния выполненности задачи.
+	/// - Parameter task: Задача, у которой необходимо изменить состояние выполненности.
+	func needSwitchCompletedState(for task: Task)
 }
 
+/// Интерактор экрана списка задач.
 final class TaskListInteractor: ITaskListInteractor {
 
 	// Properties
@@ -60,11 +63,11 @@ final class TaskListInteractor: ITaskListInteractor {
 	}
 }
 
-// MARK: - ITaskTableViewCellOutput
+// MARK: - ITaskListInteractorOutput
 
-extension TaskListInteractor: ITaskTableViewCellOutput {
+extension TaskListInteractor: ITaskListInteractorOutput {
 
-	func didTapCompletedCheckbox(for task: Task) {
+	func needSwitchCompletedState(for task: Task) {
 		guard let oldIndexPath = taskListDataAdapter.indexPath(for: task) else { return }
 		task.isCompleted.toggle()
 		guard let newIndexPath = taskListDataAdapter.indexPath(for: task) else { return }

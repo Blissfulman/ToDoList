@@ -7,10 +7,11 @@
 
 import UIKit
 
+/// Вью экрана авторизации.
 protocol IAuthorizationView: AnyObject {
-	/// Преподносит вью успешную авторизацию.
+	/// Отображает успешную авторизацию.
 	func displayLogin(viewModel: AuthorizationModel.Login.ViewModel)
-	/// Преподносит вью ошибку авторизации.
+	/// Отображает ошибку авторизации.
 	func displayCredentialsError(viewModel: AuthorizationModel.CredentialsError.ViewModel)
 }
 
@@ -23,6 +24,7 @@ private enum Constants {
 	static let signInButtonTitle = "Sign in"
 }
 
+/// Вью экрана авторизации.
 final class AuthorizationViewController: UIViewController, IAuthorizationView {
 
 	// UI

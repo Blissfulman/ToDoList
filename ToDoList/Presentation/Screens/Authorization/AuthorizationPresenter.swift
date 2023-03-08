@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Презентер экрана авторизации.
 protocol IAuthorizationPresenter: AnyObject {
 	/// Преподносит вью успешную авторизацию.
 	func presentLogin(response: AuthorizationModel.Login.Response)
@@ -20,6 +21,7 @@ private enum Constants {
 	static let credentialsErrorActionTitle = "Ok"
 }
 
+/// Презентер экрана авторизации.
 final class AuthorizationPresenter: IAuthorizationPresenter {
 
 	// Properties

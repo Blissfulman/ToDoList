@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Презентер экрана списка задач.
 protocol ITaskListPresenter: AnyObject {
 	/// Преподносит вью список задач.
 	func presentTaskList(response: TaskListModel.FetchTaskList.Response)
@@ -36,6 +37,7 @@ private enum Constants {
 	static let priorityLabelText = "Priority: "
 }
 
+/// Презентер экрана списка задач.
 final class TaskListPresenter: ITaskListPresenter {
 	
 	// Properties
@@ -61,7 +63,7 @@ final class TaskListPresenter: ITaskListPresenter {
 	
 	// MARK: - Private methods
 	
-	private func convertToViewData(_ presentationData: TaskListModel.PresentationData, output: ITaskTableViewCellOutput) -> TaskListModel.ViewData {
+	private func convertToViewData(_ presentationData: TaskListModel.PresentationData, output: ITaskListInteractorOutput) -> TaskListModel.ViewData {
 		let viewDataSections: [TaskListModel.ViewData.Section] = presentationData.sections.map {
 			switch $0 {
 			case .uncompleted(tasks: let tasks):
@@ -79,7 +81,7 @@ final class TaskListPresenter: ITaskListPresenter {
 		return TaskListModel.ViewData(sections: viewDataSections)
 	}
 	
-	private func mapTask(_ task: Task, output: ITaskTableViewCellOutput) -> TaskListModel.ViewData.Task {
+	private func mapTask(_ task: Task, output: ITaskListInteractorOutput) -> TaskListModel.ViewData.Task {
 		switch task {
 		case let importantTask as ImportantTask:
 			let task = TaskListModel.ViewData.ImportantTask(
@@ -89,7 +91,7 @@ final class TaskListPresenter: ITaskListPresenter {
 				priorityText: Constants.priorityLabelText + importantTask.priority.description,
 				executionDate: importantTask.executionDate?.formatted(date: .numeric, time: .omitted) ?? "No executionDate",
 				didTapCompletedCheckboxAction: { [weak output] in
-					output?.didTapCompletedCheckbox(for: task)
+					output?.needSwitchCompletedState(for: task)
 				}
 			)
 			return .importantTask(task)
@@ -98,7 +100,7 @@ final class TaskListPresenter: ITaskListPresenter {
 				title: task.title,
 				checkboxImageName: task.isCompleted ? Constants.completedCheckboxImageName : Constants.uncompletedCheckboxImageName,
 				didTapCompletedCheckboxAction: { [weak output] in
-					output?.didTapCompletedCheckbox(for: task)
+					output?.needSwitchCompletedState(for: task)
 				}
 			)
 			return .regularTask(task)

@@ -11,7 +11,7 @@ import UIKit
 protocol IConfigurableTableCell: UITableViewCell {
 	associatedtype ConfigurationModel
 
-	/// Конфигурация ячейки.
-	/// - Parameter model: Модель данных ячейки.
+	/// Конфигурирует ячейку.
+	/// - Parameter model: Конфигурационная модель данных ячейки.
 	func configure(with model: ConfigurationModel)
 }

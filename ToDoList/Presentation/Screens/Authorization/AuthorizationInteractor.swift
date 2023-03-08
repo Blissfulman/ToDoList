@@ -7,11 +7,13 @@
 
 import Foundation
 
+/// Интерактор экрана авторизации.
 protocol IAuthorizationInteractor: AnyObject {
 	/// Запрашивает авторизацию.
 	func requestLogin(request: AuthorizationModel.Login.Request)
 }
 
+/// Интерактор экрана авторизации.
 final class AuthorizationInteractor: IAuthorizationInteractor {
 
 	// Properties

@@ -9,13 +9,13 @@ import UIKit
 
 extension UITableView {
 
-	/// Регистрация класса ячейки.
+	/// Регистрирует класс ячейки.
 	/// - Parameter type: Регистрируемый класс.
 	func registerCell<T: UITableViewCell>(type: T.Type) {
 		register(type, forCellReuseIdentifier: String(describing: type))
 	}
 
-	/// Возвращает переиспользуемый объект ячейки UITableView для указанного типа.
+	/// Возвращает переиспользуемый объект ячейки UITableView для указанного типа ячейки.
 	/// - Parameters:
 	///   - type: Тип ячейки.
 	///   - indexPath: IndexPath ячейки.

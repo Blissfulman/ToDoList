@@ -7,13 +7,14 @@
 
 import Foundation
 
+/// Модель экрана списка задач.
 enum TaskListModel {
 
 	enum FetchTaskList {
 		struct Request {}
 		struct Response {
 			let presentationData: PresentationData
-			let output: ITaskTableViewCellOutput
+			let output: ITaskListInteractorOutput
 		}
 		struct ViewModel {
 			let viewData: ViewData
@@ -23,7 +24,7 @@ enum TaskListModel {
 	enum UpdateTask {
 		struct Response {
 			let presentationData: PresentationData
-			let output: ITaskTableViewCellOutput
+			let output: ITaskListInteractorOutput
 			let oldIndexPath: IndexPath
 			let newIndexPath: IndexPath
 		}
