@@ -16,21 +16,14 @@ enum AuthorizationModel {
 	enum Login {
 
 		struct Request {
-
-			/// Модель введённых учётных данных пользователя.
-			struct EnteredCredentials {
-				let login: String?
-				let password: String?
-			}
-
-			let credentials: EnteredCredentials
+			let credentials: Credentials
 		}
 
 		struct Response {
 
 			enum RequestResult {
-				case successLogin
-				case missingСredentials
+				case successfulLogin
+				case missedСredentials
 				case invalidСredentials
 			}
 
@@ -44,8 +37,8 @@ enum AuthorizationModel {
 	struct ViewModel {
 
 		enum ResponseResult {
-			case successLogin
-			case missingСredentials(model: AlertModel)
+			case successfulLogin
+			case missedСredentials(model: AlertModel)
 			case invalidСredentials(model: AlertModel)
 		}
 

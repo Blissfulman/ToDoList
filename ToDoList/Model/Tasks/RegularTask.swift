@@ -7,4 +7,5 @@
 
 import Foundation
 
+/// Обычная задача.
 final class RegularTask: Task {}

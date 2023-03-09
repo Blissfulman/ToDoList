@@ -16,7 +16,8 @@ protocol ITaskListPresenter: AnyObject {
 }
 
 private extension ImportantTask.Priority {
-	
+
+	/// Текстовое описание приоритета.
 	var description: String {
 		switch self {
 		case .low:
@@ -46,32 +47,33 @@ final class TaskListPresenter: ITaskListPresenter {
 	// MARK: - ITaskListPresenter
 	
 	func presentTaskList(response: TaskListModel.FetchTaskList.Response) {
-		let viewData = convertToViewData(response.presentationData, output: response.output)
-		let viewModel = TaskListModel.FetchTaskList.ViewModel(viewData: viewData)
-		view?.displayTaskList(viewModel: viewModel)
+		let viewData = convertToViewData(response.presenterData, output: response.output)
+		let viewModel = TaskListModel.ViewModel(responseResult: .updatingTaskList(model: viewData))
+		view?.render(viewModel: viewModel)
 	}
 	
 	func presentUpdatedTask(response: TaskListModel.UpdateTask.Response) {
-		let viewData = convertToViewData(response.presentationData, output: response.output)
-		let viewModel = TaskListModel.UpdateTask.ViewModel(
+		let viewData = convertToViewData(response.presenterData, output: response.output)
+		let updatingTaskModel = TaskListModel.UpdatingTaskModel(
 			viewData: viewData,
 			oldIndexPath: response.oldIndexPath,
 			newIndexPath: response.newIndexPath
 		)
-		view?.displayUpdatedTask(viewModel: viewModel)
+		let viewModel = TaskListModel.ViewModel(responseResult: .updatingTask(model: updatingTaskModel))
+		view?.render(viewModel: viewModel)
 	}
 	
 	// MARK: - Private methods
 	
-	private func convertToViewData(_ presentationData: TaskListModel.PresentationData, output: ITaskListInteractorOutput) -> TaskListModel.ViewData {
-		let viewDataSections: [TaskListModel.ViewData.Section] = presentationData.sections.map {
+	private func convertToViewData(_ presenterData: TaskListModel.PresenterData, output: ITaskListInteractorOutput) -> TaskListModel.ViewData {
+		let viewDataSections: [TaskListModel.ViewData.Section] = presenterData.sections.map {
 			switch $0 {
-			case .uncompleted(tasks: let tasks):
+			case .uncompleted(let tasks):
 				return TaskListModel.ViewData.Section(
 					title: Constants.uncompletedTasksSectionTitle,
 					tasks: tasks.map { mapTask($0, output: output) }
 				)
-			case .completed(tasks: let tasks):
+			case .completed(let tasks):
 				return TaskListModel.ViewData.Section(
 					title: Constants.completedTasksSectionTitle,
 					tasks: tasks.map { mapTask($0, output: output) }
@@ -90,7 +92,7 @@ final class TaskListPresenter: ITaskListPresenter {
 				isExpired: importantTask.isExpired,
 				priorityText: Constants.priorityLabelText + importantTask.priority.description,
 				executionDate: importantTask.executionDate?.formatted(date: .numeric, time: .omitted) ?? "No executionDate",
-				didTapCompletedCheckboxAction: { [weak output] in
+				completionCheckboxTapAction: { [weak output] in
 					output?.needSwitchCompletedState(for: task)
 				}
 			)
@@ -99,7 +101,7 @@ final class TaskListPresenter: ITaskListPresenter {
 			let task = TaskListModel.ViewData.RegularTask(
 				title: task.title,
 				checkboxImageName: task.isCompleted ? Constants.completedCheckboxImageName : Constants.uncompletedCheckboxImageName,
-				didTapCompletedCheckboxAction: { [weak output] in
+				completionCheckboxTapAction: { [weak output] in
 					output?.needSwitchCompletedState(for: task)
 				}
 			)

@@ -9,10 +9,8 @@ import UIKit
 
 /// Вью экрана списка задач.
 protocol ITaskListView: AnyObject {
-	/// Отображает список задач.
-	func displayTaskList(viewModel: TaskListModel.FetchTaskList.ViewModel)
-	/// Отображает обновлённую задачу. Для корректроного выполнения обновления также передаются и сохраняются обновлённые данные таблицы.
-	func displayUpdatedTask(viewModel: TaskListModel.UpdateTask.ViewModel)
+	/// Отображает данные, соответствующие переданной модели.
+	func render(viewModel: TaskListModel.ViewModel)
 }
 
 private enum Constants {
@@ -53,24 +51,25 @@ final class TaskListViewController: UIViewController, ITaskListView {
 		setupUI()
 		setupLayout()
 		configureUI()
-		interactor.requestTaskList(request: TaskListModel.FetchTaskList.Request())
+		interactor.requestTaskList()
 	}
 
 	// MARK: - ITaskListView
 
-	func displayTaskList(viewModel: TaskListModel.FetchTaskList.ViewModel) {
-		viewData = viewModel.viewData
-		tasksTableView.reloadData()
-	}
+	func render(viewModel: TaskListModel.ViewModel) {
+		switch viewModel.responseResult {
+		case .updatingTaskList(let viewData):
+			self.viewData = viewData
+			tasksTableView.reloadData()
+		case .updatingTask(let updatingTaskModel):
+			viewData = updatingTaskModel.viewData
 
-	func displayUpdatedTask(viewModel: TaskListModel.UpdateTask.ViewModel) {
-		viewData = viewModel.viewData
-		
-		tasksTableView.performBatchUpdates({
-			tasksTableView.moveRow(at: viewModel.oldIndexPath, to: viewModel.newIndexPath)
-		}, completion: { [weak self] _ in
-			self?.tasksTableView.reloadRows(at: [viewModel.newIndexPath], with: .automatic)
-		})
+			tasksTableView.performBatchUpdates({
+				tasksTableView.moveRow(at: updatingTaskModel.oldIndexPath, to: updatingTaskModel.newIndexPath)
+			}, completion: { [weak self] _ in
+				self?.tasksTableView.reloadRows(at: [updatingTaskModel.newIndexPath], with: .automatic)
+			})
+		}
 	}
 
 	// MARK: - Private methods

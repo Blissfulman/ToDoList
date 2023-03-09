@@ -33,15 +33,15 @@ final class AuthorizationPresenter: IAuthorizationPresenter {
 		let viewModel: AuthorizationModel.ViewModel
 
 		switch response.requestResult {
-		case .successLogin:
-			viewModel = AuthorizationModel.ViewModel(responseResult: .successLogin)
-		case .missingСredentials:
+		case .successfulLogin:
+			viewModel = AuthorizationModel.ViewModel(responseResult: .successfulLogin)
+		case .missedСredentials:
 			let alertModel = AuthorizationModel.AlertModel(
 				title: Constants.missingСredentialsTitle,
 				message: Constants.missingСredentialsMessage,
 				actionTitle: Constants.actionTitle
 			)
-			viewModel = AuthorizationModel.ViewModel(responseResult: .missingСredentials(model: alertModel))
+			viewModel = AuthorizationModel.ViewModel(responseResult: .missedСredentials(model: alertModel))
 		case .invalidСredentials:
 			let alertModel = AuthorizationModel.AlertModel(
 				title: Constants.invalidСredentialsTitle,

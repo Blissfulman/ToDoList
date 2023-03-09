@@ -20,7 +20,7 @@ final class RegularTaskTableViewCell: UITableViewCell, IConfigurableTableCell {
 	typealias ConfigurationModel = TaskListModel.ViewData.RegularTask
 
 	// UI
-	private lazy var checkboxImageView: UIImageView = {
+	private lazy var completionСheckboxImageView: UIImageView = {
 		let imageView = UIImageView().prepareForAutoLayout()
 		imageView.isUserInteractionEnabled = true
 		return imageView
@@ -32,7 +32,7 @@ final class RegularTaskTableViewCell: UITableViewCell, IConfigurableTableCell {
 	}()
 
 	// Properties
-	private var didTapCompletedCheckboxAction: (() -> Void)?
+	private var completionCheckboxTapAction: (() -> Void)?
 
 	// MARK: - Initialization
 
@@ -51,41 +51,41 @@ final class RegularTaskTableViewCell: UITableViewCell, IConfigurableTableCell {
 
 	override func prepareForReuse() {
 		super.prepareForReuse()
-		checkboxImageView.image = nil
+		completionСheckboxImageView.image = nil
 		titleLabel.text = nil
 	}
 
 	// MARK: - IConfigurableTableCell
 
 	func configure(with model: ConfigurationModel) {
-		didTapCompletedCheckboxAction = model.didTapCompletedCheckboxAction
+		completionCheckboxTapAction = model.completionCheckboxTapAction
 		
 		titleLabel.text = model.title
-		checkboxImageView.image = UIImage(systemName: model.checkboxImageName)
+		completionСheckboxImageView.image = UIImage(systemName: model.checkboxImageName)
 	}
 
 	// MARK: - Private methods
 
 	private func setupUI() {
 		contentView.addSubview(titleLabel)
-		contentView.addSubview(checkboxImageView)
+		contentView.addSubview(completionСheckboxImageView)
 
 		let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapCheckbox))
 		tapGestureRecognizer.isEnabled = true
-		checkboxImageView.addGestureRecognizer(tapGestureRecognizer)
+		completionСheckboxImageView.addGestureRecognizer(tapGestureRecognizer)
 	}
 
 	private func setupLayout() {
 		NSLayoutConstraint.activate([
 			contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.contentViewHeight),
 
-			checkboxImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-			checkboxImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.contentHorizontalInset),
-			checkboxImageView.widthAnchor.constraint(equalToConstant: Constants.checkboxImageViewSize),
-			checkboxImageView.heightAnchor.constraint(equalToConstant: Constants.checkboxImageViewSize),
+			completionСheckboxImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+			completionСheckboxImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.contentHorizontalInset),
+			completionСheckboxImageView.widthAnchor.constraint(equalToConstant: Constants.checkboxImageViewSize),
+			completionСheckboxImageView.heightAnchor.constraint(equalToConstant: Constants.checkboxImageViewSize),
 
 			titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-			titleLabel.leadingAnchor.constraint(equalTo: checkboxImageView.trailingAnchor, constant: Constants.contentSpace),
+			titleLabel.leadingAnchor.constraint(equalTo: completionСheckboxImageView.trailingAnchor, constant: Constants.contentSpace),
 			titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.contentHorizontalInset)
 		])
 	}
@@ -94,7 +94,8 @@ final class RegularTaskTableViewCell: UITableViewCell, IConfigurableTableCell {
 		selectionStyle = .none
 	}
 
-	@objc private func didTapCheckbox() {
-		didTapCompletedCheckboxAction?()
+	@objc
+	private func didTapCheckbox() {
+		completionCheckboxTapAction?()
 	}
 }

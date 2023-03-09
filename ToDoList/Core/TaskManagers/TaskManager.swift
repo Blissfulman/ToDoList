@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Менеджер задач.
 class TaskManager: ITaskManager {
 
 	// Properties

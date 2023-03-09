@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Важная задача.
 final class ImportantTask: Task {
 
 	// MARK: - Nested types

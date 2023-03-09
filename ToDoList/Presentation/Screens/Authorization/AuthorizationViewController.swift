@@ -9,7 +9,7 @@ import UIKit
 
 /// Вью экрана авторизации.
 protocol IAuthorizationView: AnyObject {
-	/// Обрабатывает переданную вью модель.
+	/// Отображает данные, соответствующие переданной модели.
 	func render(viewModel: AuthorizationModel.ViewModel)
 }
 
@@ -92,10 +92,10 @@ final class AuthorizationViewController: UIViewController, IAuthorizationView {
 
 	func render(viewModel: AuthorizationModel.ViewModel) {
 		switch viewModel.responseResult {
-		case .successLogin:
+		case .successfulLogin:
 			router.navigateToTaskList()
-		case .missingСredentials(let model), .invalidСredentials(let model):
-			router.navigateToAlert(model: model)
+		case .missedСredentials(let alertModel), .invalidСredentials(let alertModel):
+			router.navigateToAlert(model: alertModel)
 		}
 	}
 
@@ -117,11 +117,11 @@ final class AuthorizationViewController: UIViewController, IAuthorizationView {
 		view.backgroundColor = .white
 	}
 
-	@objc private func didTapSignInButton() {
-		let credentials = AuthorizationModel.Login.Request.EnteredCredentials(
-			login: loginTextField.text,
-			password: passwordTextField.text
-		)
+	@objc
+	private func didTapSignInButton() {
+		guard let login = loginTextField.text,
+			  let password = passwordTextField.text else { return }
+		let credentials = AuthorizationModel.Credentials(login: login, password: password)
 		let request = AuthorizationModel.Login.Request(credentials: credentials)
 		interactor.requestLogin(request: request)
 	}

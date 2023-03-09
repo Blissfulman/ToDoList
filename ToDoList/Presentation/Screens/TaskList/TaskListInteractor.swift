@@ -10,7 +10,7 @@ import Foundation
 /// Интерактор экрана списка задач.
 protocol ITaskListInteractor: AnyObject {
 	/// Запрашивает список задач.
-	func requestTaskList(request: TaskListModel.FetchTaskList.Request)
+	func requestTaskList()
 }
 
 /// Протокол для делегирования интерактору обработки событий списка задач.
@@ -42,7 +42,7 @@ final class TaskListInteractor: ITaskListInteractor {
 	
 	// MARK: - ITaskListInteractor
 	
-	func requestTaskList(request: TaskListModel.FetchTaskList.Request) {
+	func requestTaskList() {
 		taskRepository.getTaskList { [weak self] result in
 			guard let self = self else { return }
 
@@ -51,7 +51,7 @@ final class TaskListInteractor: ITaskListInteractor {
 				self.taskListDataAdapter.loadToManager(tasks)
 
 				let response = TaskListModel.FetchTaskList.Response(
-					presentationData: self.taskListDataAdapter.presentationData,
+					presenterData: self.taskListDataAdapter.presenterData,
 					output: self
 				)
 				self.presenter.presentTaskList(response: response)
@@ -73,7 +73,7 @@ extension TaskListInteractor: ITaskListInteractorOutput {
 		guard let newIndexPath = taskListDataAdapter.indexPath(for: task) else { return }
 		
 		let response = TaskListModel.UpdateTask.Response(
-			presentationData: taskListDataAdapter.presentationData,
+			presenterData: taskListDataAdapter.presenterData,
 			output: self,
 			oldIndexPath: oldIndexPath,
 			newIndexPath: newIndexPath
