@@ -7,11 +7,10 @@
 
 import UIKit
 
+/// Вью экрана авторизации.
 protocol IAuthorizationView: AnyObject {
-	/// Преподносит вью успешную авторизацию.
-	func displayLogin(viewModel: AuthorizationModel.Login.ViewModel)
-	/// Преподносит вью ошибку авторизации.
-	func displayCredentialsError(viewModel: AuthorizationModel.CredentialsError.ViewModel)
+	/// Отображает данные, соответствующие переданной модели.
+	func render(viewModel: AuthorizationModel.ViewModel)
 }
 
 private enum Constants {
@@ -23,6 +22,7 @@ private enum Constants {
 	static let signInButtonTitle = "Sign in"
 }
 
+/// Вью экрана авторизации.
 final class AuthorizationViewController: UIViewController, IAuthorizationView {
 
 	// UI
@@ -90,12 +90,13 @@ final class AuthorizationViewController: UIViewController, IAuthorizationView {
 
 	// MARK: - IAuthorizationView
 
-	func displayLogin(viewModel: AuthorizationModel.Login.ViewModel) {
-		router.navigateTo(route: viewModel.route)
-	}
-
-	func displayCredentialsError(viewModel: AuthorizationModel.CredentialsError.ViewModel) {
-		router.navigateTo(route: viewModel.route)
+	func render(viewModel: AuthorizationModel.ViewModel) {
+		switch viewModel.responseResult {
+		case .successfulLogin:
+			router.navigateToTaskList()
+		case .missedСredentials(let alertModel), .invalidСredentials(let alertModel):
+			router.navigateToAlert(model: alertModel)
+		}
 	}
 
 	// MARK: - Private methods
@@ -116,11 +117,11 @@ final class AuthorizationViewController: UIViewController, IAuthorizationView {
 		view.backgroundColor = .white
 	}
 
-	@objc private func didTapSignInButton() {
-		let credentials = AuthorizationModel.Credentials(
-			login: loginTextField.text,
-			password: passwordTextField.text
-		)
+	@objc
+	private func didTapSignInButton() {
+		guard let login = loginTextField.text,
+			  let password = passwordTextField.text else { return }
+		let credentials = AuthorizationModel.Credentials(login: login, password: password)
 		let request = AuthorizationModel.Login.Request(credentials: credentials)
 		interactor.requestLogin(request: request)
 	}

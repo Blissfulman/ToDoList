@@ -7,6 +7,7 @@
 
 import UIKit
 
+/// Сборщик экрана списка задач.
 final class TaskListAssembly {
 
 	func assemble() -> UIViewController {

@@ -7,44 +7,59 @@
 
 import Foundation
 
+/// Модель экрана авторизации.
 enum AuthorizationModel {
 
+	// MARK: - Use cases
+
+	/// Авторизация пользователя
 	enum Login {
+
 		struct Request {
 			let credentials: Credentials
 		}
-		struct Response {}
-		struct ViewModel {
-			let route: Route
+
+		struct Response {
+
+			enum RequestResult {
+				case successfulLogin
+				case missedСredentials
+				case invalidСredentials
+			}
+
+			let requestResult: RequestResult
 		}
 	}
 
-	enum CredentialsError {
-		struct Response {}
-		struct ViewModel {
-			let route: Route
-		}
-	}
+	// MARK: - ViewModel
 
-	// MARK: - Routing
+	/// Модель данных вью.
+	struct ViewModel {
 
-	enum Route {
-
-		struct CredentialsErrorModel {
-			let title: String
-			let message: String
-			let actionTitle: String
+		enum ResponseResult {
+			case successfulLogin
+			case missedСredentials(model: AlertModel)
+			case invalidСredentials(model: AlertModel)
 		}
 
-		case taskList
-		case credentialsError(model: CredentialsErrorModel)
+		let responseResult: ResponseResult
 	}
 }
 
+// MARK: - Nested models
+
 extension AuthorizationModel {
 
+	/// Модель учётных данных пользователя.
 	struct Credentials {
-		let login: String?
-		let password: String?
+		let login: String
+		let password: String
+	}
+
+	/// Модель данных всплывающего сообщения.
+	struct AlertModel {
+		let title: String
+		let message: String
+		let actionTitle: String
 	}
 }
