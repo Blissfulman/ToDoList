@@ -7,6 +7,7 @@
 
 import UIKit
 
+/// Сборщик экрана авторизации.
 final class AuthorizationAssembly {
 
 	func assemble() -> UIViewController {

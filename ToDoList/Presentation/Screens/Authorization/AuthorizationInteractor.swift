@@ -7,11 +7,13 @@
 
 import Foundation
 
+/// Интерактор экрана авторизации.
 protocol IAuthorizationInteractor: AnyObject {
 	/// Запрашивает авторизацию.
 	func requestLogin(request: AuthorizationModel.Login.Request)
 }
 
+/// Интерактор экрана авторизации.
 final class AuthorizationInteractor: IAuthorizationInteractor {
 
 	// Properties
@@ -28,12 +30,17 @@ final class AuthorizationInteractor: IAuthorizationInteractor {
 	// MARK: - AuthorizationInteractor
 
 	func requestLogin(request: AuthorizationModel.Login.Request) {
-		if credentialsVerifier.isValid(credentials: request.credentials) {
-			let response = AuthorizationModel.Login.Response()
+		guard
+			!request.credentials.login.isEmpty,
+			!request.credentials.password.isEmpty
+		else {
+			let response = AuthorizationModel.Login.Response(requestResult: .missedСredentials)
 			presenter.presentLogin(response: response)
-		} else {
-			let response = AuthorizationModel.CredentialsError.Response()
-			presenter.presentCredentialsError(response: response)
+			return
 		}
+		
+		let isValidCredentials = credentialsVerifier.isValid(credentials: request.credentials)
+		let response = AuthorizationModel.Login.Response(requestResult: isValidCredentials ? .successfulLogin : .invalidСredentials)
+		presenter.presentLogin(response: response)
 	}
 }

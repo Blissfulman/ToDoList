@@ -22,7 +22,7 @@ final class ImportantTaskTableViewCell: UITableViewCell, IConfigurableTableCell 
 	typealias ConfigurationModel = TaskListModel.ViewData.ImportantTask
 
 	// UI
-	private lazy var checkboxImageView: UIImageView = {
+	private lazy var completionСheckboxImageView: UIImageView = {
 		let imageView = UIImageView().prepareForAutoLayout()
 		imageView.isUserInteractionEnabled = true
 		return imageView
@@ -44,7 +44,7 @@ final class ImportantTaskTableViewCell: UITableViewCell, IConfigurableTableCell 
 	}()
 
 	// Properties
-	private var didTapCompletedCheckboxAction: (() -> Void)?
+	private var completionCheckboxTapAction: (() -> Void)?
 
 	// MARK: - Initialization
 
@@ -63,7 +63,7 @@ final class ImportantTaskTableViewCell: UITableViewCell, IConfigurableTableCell 
 
 	override func prepareForReuse() {
 		super.prepareForReuse()
-		checkboxImageView.image = nil
+		completionСheckboxImageView.image = nil
 		titleLabel.text = nil
 		priorityLabel.text = nil
 		executionDateLabel.text = nil
@@ -72,10 +72,10 @@ final class ImportantTaskTableViewCell: UITableViewCell, IConfigurableTableCell 
 	// MARK: - IConfigurableTableCell
 
 	func configure(with model: ConfigurationModel) {
-		didTapCompletedCheckboxAction = model.didTapCompletedCheckboxAction
+		completionCheckboxTapAction = model.completionCheckboxTapAction
 
 		titleLabel.text = model.title
-		checkboxImageView.image = UIImage(systemName: model.checkboxImageName)
+		completionСheckboxImageView.image = UIImage(systemName: model.checkboxImageName)
 		priorityLabel.text = model.priorityText
 		executionDateLabel.text = model.executionDate
 		contentView.backgroundColor = model.isExpired ? Constants.expiredTaskBackgroundColor : Constants.unexpiredTaskBackgroundColor
@@ -85,28 +85,28 @@ final class ImportantTaskTableViewCell: UITableViewCell, IConfigurableTableCell 
 
 	private func setupUI() {
 		contentView.addSubview(titleLabel)
-		contentView.addSubview(checkboxImageView)
+		contentView.addSubview(completionСheckboxImageView)
 		contentView.addSubview(priorityLabel)
 		contentView.addSubview(executionDateLabel)
 
 		let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapCheckbox))
 		tapGestureRecognizer.isEnabled = true
-		checkboxImageView.addGestureRecognizer(tapGestureRecognizer)
+		completionСheckboxImageView.addGestureRecognizer(tapGestureRecognizer)
 	}
 
 	private func setupLayout() {
 		NSLayoutConstraint.activate([
-			checkboxImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-			checkboxImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.contentHorizontalInset),
-			checkboxImageView.widthAnchor.constraint(equalToConstant: Constants.checkboxImageViewSize),
-			checkboxImageView.heightAnchor.constraint(equalToConstant: Constants.checkboxImageViewSize),
+			completionСheckboxImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+			completionСheckboxImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.contentHorizontalInset),
+			completionСheckboxImageView.widthAnchor.constraint(equalToConstant: Constants.checkboxImageViewSize),
+			completionСheckboxImageView.heightAnchor.constraint(equalToConstant: Constants.checkboxImageViewSize),
 
 			titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.contentVerticalInset),
-			titleLabel.leadingAnchor.constraint(equalTo: checkboxImageView.trailingAnchor, constant: Constants.contentSpace),
+			titleLabel.leadingAnchor.constraint(equalTo: completionСheckboxImageView.trailingAnchor, constant: Constants.contentSpace),
 			titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.contentHorizontalInset),
 
 			priorityLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: Constants.contentSpace),
-			priorityLabel.leadingAnchor.constraint(equalTo: checkboxImageView.trailingAnchor, constant: Constants.contentSpace),
+			priorityLabel.leadingAnchor.constraint(equalTo: completionСheckboxImageView.trailingAnchor, constant: Constants.contentSpace),
 			priorityLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.contentVerticalInset),
 
 			executionDateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: Constants.contentSpace),
@@ -121,7 +121,8 @@ final class ImportantTaskTableViewCell: UITableViewCell, IConfigurableTableCell 
 		selectionStyle = .none
 	}
 
-	@objc private func didTapCheckbox() {
-		didTapCompletedCheckboxAction?()
+	@objc
+	private func didTapCheckbox() {
+		completionCheckboxTapAction?()
 	}
 }

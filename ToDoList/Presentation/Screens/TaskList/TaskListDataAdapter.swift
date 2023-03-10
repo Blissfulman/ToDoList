@@ -9,8 +9,8 @@ import Foundation
 
 /// Адаптер, предоставляющий презентационные данные о списке задач.
 protocol ITaskListDataAdapter: AnyObject {
-	/// Модель `TaskListModel.PresentationData`.
-	var presentationData: TaskListModel.PresentationData { get }
+	/// Модель данных `TaskListModel.PresenterData`.
+	var presenterData: TaskListModel.PresenterData { get }
 
 	/// Загрузка данных о задачах в менеджер.
 	/// - Parameter tasks: Список задач.
@@ -21,6 +21,7 @@ protocol ITaskListDataAdapter: AnyObject {
 	func indexPath(for task: Task) -> IndexPath?
 }
 
+/// Адаптер, предоставляющий презентационные данные о списке задач.
 final class TaskListDataAdapter: ITaskListDataAdapter {
 
 	// Properties
@@ -34,11 +35,11 @@ final class TaskListDataAdapter: ITaskListDataAdapter {
 
 	// MARK: - ITaskListSectionsAdapter
 
-	var presentationData: TaskListModel.PresentationData {
-		TaskListModel.PresentationData(
+	var presenterData: TaskListModel.PresenterData {
+		TaskListModel.PresenterData(
 			sections: [
-				TaskListModel.PresentationData.Section.uncompleted(tasks: taskManager.uncompletedTasks),
-				TaskListModel.PresentationData.Section.completed(tasks: taskManager.completedTasks),
+				TaskListModel.PresenterData.Section.uncompleted(tasks: taskManager.uncompletedTasks),
+				TaskListModel.PresenterData.Section.completed(tasks: taskManager.completedTasks),
 			]
 		)
 	}
